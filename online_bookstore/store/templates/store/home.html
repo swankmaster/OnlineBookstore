@@ -1,0 +1,42 @@
+{% load static %}
+<!DOCTYPE HTML>
+<html lang="en">
+    <head>
+        <link rel="stylesheet" href="{% static 'store/css/home.css' %}">
+        <meta charset="utf-8">
+        <title>My Bookstore</title>
+    </head>
+    <header>
+        <h1>Welcome To Online Bookstore</h1>
+        <nav>
+            <ul>
+                <li><a href = "{% url 'home' %}">Home</a></li>
+                <li><a href = "{% url 'login' %}">Login/Register</a></li>
+                <li><a href = "{% url 'edit_profile' %}">Edit Profile</a></li>
+                <li><a href = "">Our Books</a></li>
+                <li><a href = "">My Cart</a></li>
+                <li><a href = "">Contact Us</a></li>
+            </ul>
+        </nav>
+    </header>
+    <body>
+        <h1>Featured Books</h1>
+        <div style ="text-align: center"><input size = "150" type="text" id="search" name="search" placeholder="Search Books!">
+            <button>Search</button>
+        </div><br><br>
+        <main>
+            <div class = "row">
+            {% for book in books %}
+                <div class = "column">
+                    <img src = "{% static 'store/images/' %}{{ book.img_src }}" +  atl = "{{ book.title }}" width = "150" height = "200">
+                    <h2>{{ book.title }}</h2>
+                    <h3>By: {{ book.author }}</h3>
+                    <p>${{ book.price }}</p>
+                    <p>{{ book.description }}</p>
+                    <p><button>Add to cart</button></p>
+                </div>
+            {% endfor %}
+            </div>
+        </main>
+    </body>
+</html>
