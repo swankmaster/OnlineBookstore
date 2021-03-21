@@ -1,8 +1,8 @@
-First, verify that Django is installed:
+First, verify that Django is installed:\
   $ pip install django
 
-Then, execute:
+Then, execute:\
   $ python online_bookstore/manage.py runserver
 
-To view website, go to:
+To view website, go to:\
   localhost:8000
