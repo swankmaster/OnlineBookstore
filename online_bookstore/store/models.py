@@ -90,7 +90,7 @@ class Promotion(models.Model):
     discount = models.CharField(max_length=45, blank=True, null=True)
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'Promotion'
 
 
@@ -101,7 +101,7 @@ class Transaction(models.Model):
     quantity = models.CharField(max_length=45)
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'Transaction'
 
 
@@ -117,5 +117,5 @@ class Users(models.Model):
     userscol = models.CharField(db_column='Userscol', max_length=45, blank=True, null=True)  # Field name made lowercase.
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'Users'
