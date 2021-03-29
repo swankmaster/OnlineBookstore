@@ -1,6 +1,10 @@
 ## First, verify that Django is installed:  
 > $ pip install django
 
+## make migrations
+> $ python online_bookstore/manage.py makemigrations
+> $ python online_bookstore/manage.py migrate
+
 ## Then, execute:  
 > $ python online_bookstore/manage.py runserver
 
