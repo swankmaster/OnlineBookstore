@@ -1,9 +1,6 @@
 ## First, verify that Django is installed:  
 > $ pip install django
 
-## Install pymysql
->$ pip install pymysql
-
 ## Then, execute:  
 > $ python online_bookstore/manage.py runserver
 
