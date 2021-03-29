@@ -26,7 +26,7 @@ class Book(models.Model):
     minimum_threshold = models.CharField(max_length=45, blank=True, null=True)
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'Book'
 
 
@@ -35,7 +35,7 @@ class Cart(models.Model):
     users_userid = models.ForeignKey('Users', models.DO_NOTHING, db_column='Users_userID')  # Field name made lowercase.
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'Cart'
 
 
@@ -44,7 +44,7 @@ class CartHasInventoryBook(models.Model):
     inventory_book_inventory = models.ForeignKey('InventoryBook', models.DO_NOTHING, db_column='Inventory_Book_inventory_id')  # Field name made lowercase.
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'Cart_has_Inventory_Book'
         unique_together = (('cart_cart', 'inventory_book_inventory'),)
 
@@ -54,7 +54,7 @@ class InventoryBook(models.Model):
     book_bookid = models.ForeignKey(Book, models.DO_NOTHING, db_column='Book_bookID')  # Field name made lowercase.
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'Inventory_Book'
 
 
@@ -67,7 +67,7 @@ class Order(models.Model):
     order_datetime = models.DateTimeField(blank=True, null=True)
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'Order'
 
 
@@ -79,7 +79,7 @@ class Paymentcard(models.Model):
     users_userid = models.ForeignKey('Users', models.DO_NOTHING, db_column='Users_userID')  # Field name made lowercase.
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'PaymentCard'
 
 
@@ -90,7 +90,7 @@ class Promotion(models.Model):
     discount = models.CharField(max_length=45, blank=True, null=True)
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'Promotion'
 
 
@@ -101,7 +101,7 @@ class Transaction(models.Model):
     quantity = models.CharField(max_length=45)
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'Transaction'
 
 
@@ -117,5 +117,5 @@ class Users(models.Model):
     userscol = models.CharField(db_column='Userscol', max_length=45, blank=True, null=True)  # Field name made lowercase.
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'Users'
