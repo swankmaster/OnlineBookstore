@@ -1,21 +1,15 @@
-{% load static %}
-<html lang="en">
 <!DOCTYPE HTML>
+<html lang="en">
     <head>
-            <link rel="stylesheet" href="{% static 'store/css/home.css' %}">
+            <link rel="stylesheet" href="home.css">
             <meta charset="utf-8">
             <title>My Bookstore</title>
     </head>
         <header>
-            <h1>Welcome To Online Bookstore</h1>
         <nav>
             <ul>
-                <li><a href = "{% url 'home' %}">Home</a></li>
-                <li><a href = "{% url 'login' %}">Login/Register</a></li>
-                <li><a href = "{% url 'edit_profile' %}">Edit Profile</a></li>
-                <li><a href = "">Our Books</a></li>
-                <li><a href = "">My Cart</a></li>
-                <li><a href = "">Contact Us</a></li>
+                <li><a href = "home.html">Home</a></li>
+                <li><a href = "login.html">Login/Register</a></li>
             </ul>
             </nav></header>
     <body>
@@ -28,20 +22,21 @@
                     <input type="text" id="username" name="username" placeholder="Enter Username"><br><br>
                     <label for="password">Password:</label><br>
                     <input type="text" id="password" name="password" placeholder="Enter Password"><br><br>
-                    <input type="submit" value="Submit">
-                </form>
+                    <input type="button" onclick="location.href='homeLoggedIn.html';" value="Login">
+					<input type="button" onclick="location.href='admin.html';" value="Admin Login">
+                </form> 
             </div>
             <div class="login_column" style="background-color:skyblue;">
                 <h2>Register</h2>
                 <form>
-                    <label for="name">Name:</label><br>
+                    <label for="name">Username:</label><br>
                     <input type="text" id="name" name="name" placeholder="Enter Name"><br><br>
                     <label for="password">E-Mail:</label><br>
                     <input type="text" id="email" name="email" placeholder="Enter a Valid E-Mail"><br><br>
                     <label for="password">Password:</label><br>
                     <input type="text" id="regis_pass" name="pass" placeholder="Enter a Password"><br><br>
-                    <input type="button" onclick="location.href='{% url 'confirmation' %}';" value="Submit" />
-                </form>
+                    <input type="button" onclick="location.href='confirmation_page.html';" value="Submit" />
+                </form> 
             </div>
         </div>
     </body>
