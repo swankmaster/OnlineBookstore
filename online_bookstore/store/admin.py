@@ -11,3 +11,4 @@ admin.site.register(Paymentcard)
 admin.site.register(Promotion)
 admin.site.register(Transaction)
 admin.site.register(Users)
+# test push
