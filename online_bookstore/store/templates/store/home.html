@@ -1,68 +1,56 @@
-{% if books %}
-    {% for i in books %}
-        <div class="row">
-           {{ i }}
+{% load static %}
+<!DOCTYPE HTML>
+<html lang="en">
+    <head>
+            <link rel="stylesheet" href="{% static 'store/css/home.css' %}">
+			<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css%22%3E">
+            <meta charset="utf-8">
+            <title>My Bookstore</title>
+    </head>
+        <header>
+            <a href="{% url 'home' %}" class="logo"><h1>The Bookstore</h1></a>
+        <nav>
+            <ul>
+                <li><a href = "{% url 'home' %}">Home</a></li>
+                {% if user.is_authenticated %}
+                    <li><a href = "{% url 'logout' %}">Logout</a></li>
+                    <li><a href = "{% url 'edit_profile' %}">Edit Profile</a></li>
+                    <li><a href = "{% url 'myCart' %}">My Cart</a></li>
+				    <li><a href = "{% url 'orderHistory' %}'">Order History</a></li>
+                {% else %}
+                    <li><a href = "{% url 'register' %}">Login/Register</a></li>
+                {% endif %}
+
+            </ul>
+            </nav></header>
+        {% if messages %}
+            {% for message in messages %}
+                {{ message }}
+            {% endfor %}
+        {% endif %}
+    <body>
+        <h1>Featured Books</h1>
+        <div style ="text-align: center"><input size = "150" type="text" id="search" name="search" placeholder="Search Books!">
+        <button>Search</button>
         </div>
-    {% endfor %}
-{% else %}
-    <div>Nothing here</div>
-{% endif %}
-
-<!--{% load static %}-->
-<!--<!DOCTYPE HTML>-->
-<!--<html lang="en">-->
-<!--    <head>-->
-<!--            <link rel="stylesheet" href="{% static 'store/css/home.css' %}">-->
-<!--			<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css%22%3E">-->
-<!--            <meta charset="utf-8">-->
-<!--            <title>My Bookstore</title>-->
-<!--    </head>-->
-<!--        <header>-->
-<!--            <a href="{% url 'home' %}" class="logo"><h1>The Bookstore</h1></a>-->
-<!--        <nav>-->
-<!--            <ul>-->
-<!--                <li><a href = "{% url 'home' %}">Home</a></li>-->
-<!--                {% if user.is_authenticated %}-->
-<!--                    <li><a href = "{% url 'logout' %}">Logout</a></li>-->
-<!--                    <li><a href = "{% url 'edit_profile' %}">Edit Profile</a></li>-->
-<!--                    <li><a href = "{% url 'myCart' %}">My Cart</a></li>-->
-<!--				    <li><a href = "{% url 'orderHistory' %}'">Order History</a></li>-->
-<!--                {% else %}-->
-<!--                    <li><a href = "{% url 'register' %}">Register</a></li>-->
-<!--                {% endif %}-->
-
-<!--            </ul>-->
-<!--            </nav></header>-->
-<!--        {% if messages %}-->
-<!--            {% for message in messages %}-->
-<!--                {{ message }}-->
-<!--            {% endfor %}-->
-<!--        {% endif %}-->
-<!--    <body>-->
-<!--        <h1>Featured Books</h1>-->
-<!--        <div style ="text-align: center"><input size = "150" type="text" id="search" name="search" placeholder="Search Books!">-->
-<!--        <button>Search</button>-->
-<!--        </div>-->
-<!--    <main>-->
-<!--        <h2> {{ books.sell_price }} </h2>-->
-<!--     <table border=1 frame=void rules=rows style="width:100%:">-->
-<!--         {% for book in books %}-->
-
-<!--            <colgroup>-->
-<!--                <col span="1" style="width: 20%;">-->
-<!--                <col span="1" style="width: 20%;">-->
-<!--                <col span="1" style="width: 40%;">-->
-<!--				<col span="1" style="width: 10%;">-->
-<!--				<col span="1" style="width: 10%;">-->
-<!--            </colgroup>-->
-<!--            <tr>-->
-<!--              <td><img src = {{ book.cover_picture }} atl = {{ book.title }} width = "10" height = "200" class="center"></td></td>-->
-<!--              <td><h3>{{ book.title }} </h3></td>-->
-<!--              <td> {{ book.description }} </td>-->
-<!--			<td>${{ book.sell_price }} <td>-->
-<!--			 <td><button class="buttons" onclick = "location.href={% url 'myCart' %};">Add to cart</button></td>-->
-<!--		   </tr>-->
-<!--         {% endfor %}-->
-<!--        </table>-->
-<!--        </main>-->
-<!--    </body>-->
+    <main>
+     <table border=1 frame=void rules=rows style="width:100%:">
+         {% for book in books %}
+            <colgroup>
+                <col span="1" style="width: 20%;">
+                <col span="1" style="width: 20%;">
+                <col span="1" style="width: 40%;">
+				<col span="1" style="width: 10%;">
+				<col span="1" style="width: 10%;">
+            </colgroup>
+            <tr>
+              <td><img src = "{% static 'store/images/' %}{{ book.cover_picture }}"  atl = {{ book.title }} width = "10" height = "200" class="center"></td></td>
+              <td><h3>{{ book.title }} </h3></td>
+              <td> {{ book.description }} </td>
+			<td>${{ book.sell_price }} <td>
+			 <td><button class="buttons" onclick = "location.href={% url 'home' %};">Add to cart</button></td>
+		   </tr>
+         {% endfor %}
+        </table>
+        </main>
+    </body>
