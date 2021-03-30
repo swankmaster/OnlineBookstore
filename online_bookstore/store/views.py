@@ -1,5 +1,9 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponse
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib import messages
+from .forms import UserRegisterForm
+from .models import Book
 
 books = [
     {
@@ -36,18 +40,33 @@ books = [
 # Create your views here.
 def home(request):
     context = {
-        'books': books
+        'books': [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
     }
+
     return render(request, 'store/home.html', context)
 
 
-def login(request):
-    return render(request, 'store/login.html')
+def register(request):
+    if request.method == 'POST':
+        form = UserRegisterForm(request.POST)
+        if form.is_valid():
+            form.save()
+            username = form.cleaned_data.get('first_Name')
+            messages.success(request, f'Account created for {username}!')
+            return redirect('home')
+    else:
+        form = UserRegisterForm()
+
+    return render(request, 'store/register.html', {'form': form})
 
 
 def edit_profile(request):
     return render(request, 'store/edit_profile.html')
 
+def myCart(request):
+    return render(request, 'store/myCart.html')
 
-def confirmation(request):
-    return render(request, 'store/confirmation_page.html')
+def orderHistory(request):
+    return render(request, 'store/orderHistory.html')
+
+

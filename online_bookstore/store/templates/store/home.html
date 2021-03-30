@@ -1,83 +1,68 @@
-<!DOCTYPE HTML>
-<html lang="en">
-    <head>
-            <link rel="stylesheet" href="home.css">
-            <meta charset="utf-8">
-            <title>My Bookstore</title>
-    </head>
-        <header>
-            <a href="home.html"><h1>Welcome To Online Bookstore</h1></a>
-        <nav>
-            <ul>
-                <li><a href = "home.html">Home</a></li>
-                <li><a href = "login.html">Login/Register</a></li>
-            </ul>
-            </nav></header>
-    <body>
-        <h1><u>Featured Books</u></h1>
-        <div style ="text-align: center"><input size = "150" type="text" id="search" name="search" placeholder="Search Books!">
-        <button>Search</button>
-        </div><br><br>
-    <main>
-     <div class = "row">
-        <div class = "column">
-            <img src = "PJTLT.jpg" atl = "Percy Jackson: The Lightning Thief" width = "150" height = "200" class="center">
-            <h2>Percy Jackson: The Lightning Thief</h2>
-            <p>$10</p>
-            <p>Twelve-year-old Percy Jackson is on the most dangerous quest of his life. With the help of a satyr and a daughter of Athena, Percy must journey across the United States to catch a thief who has stolen the original weapon of mass destruction — Zeus’ master bolt. Along the way, he must face a host of mythological enemies determined to stop him. Most of all, he must come to terms with a father he has never known, and an Oracle that has warned him of betrayal by a friend.
-            </p>
+{% if books %}
+    {% for i in books %}
+        <div class="row">
+           {{ i }}
         </div>
-         <div class = "column">
-            <img src = "PJTSOFM.jpg" atl = "Percy Jackson: Sea of Monsters" width ="150" height="200" class="center">
-            <h2>Percy Jackson: Sea of Monsters</h2>
-            <p>$10</p>
-            <p>When Thalia’s tree is mysteriously poisoned, the magical borders of Camp Half-Blood begin to fail. Now Percy and his friends have just days to find the only magic item powerful to save the camp before it is overrun by monsters. The catch: they must sail into the Sea of Monsters to find it. Along the way, Percy must stage a daring rescue operation to save his old friend Grover, and he learns a terrible secret about his own family, which makes him question whether being the son of Poseidon is an honor or a curse.
-            </p>
-        </div>
-         <div class = "column">
-            <img src = "PJTTC.jpg" atl = "Percy Jackson: The Titans Curse" width ="150" height="200" class="center">
-            <h2>Percy Jackson: The Titans Curse</h2>
-            <p>$10</p>
-            <p>When Percy Jackson gets an urgent distress call from his friend Grover, he immediately prepares for battle. He knows he will need his powerful demigod allies at his side, his trusty bronze sword Riptide, and… a ride from his mom.
-            </p>
-        </div>
-         <div class = "column">
-            <img src = "PJTBOTL.jpg" atl = "Percy Jackson: The Battle of the Labyrinth" width ="150" height="200" class="center">
-            <h2>Percy Jackson: The Battle of the Labyrinth</h2>
-            <p>$10</p>
-            <p>Percy Jackson isn’t expecting freshman orientation to be any fun, but when a mysterious mortal acquaintance appears, pursued by demon cheerleaders, things quickly go from bad to worse.
-            </p>
-        </div>
-     </div>
-     </main>
-    <aside>
-        <h1 class="coming"><u>Coming Soon!</u></h1>
-        <div class = "row">
-            <div class = "column">
-                <img src = "HPTSS.jpg" atl = "Harry Potter and The Sorcerer's Stone" width = "150" height = "200" class="center">
-                <h2>Harry Potter and The Sorcerer's Stone</h2>
-                <p>At the beginning of the novel, Harry Potter is living in a cupboard under the stairs, suffering appalling maltreatment at the hands of the Dursley family, to whose care he was confided as an infant following the death of his parents; his mother was Mrs. Dursley’s sister. On his eleventh birthday, however, it is revealed to him, despite the Dursleys’ best efforts, that he has inherited magical abilities and is scheduled for education in wizardry at Hogwarts Academy, a key pillar of the British magical community, which lives in strict covert isolation from untalented “muggles.” This message is delivered by the intimidating Hagrid, who lives on the school grounds on the edge of a Forbidden Forest. Hagrid, who is fascinated by all manner of magical creatures, becomes Harry’s first fast friend.
-                </p>
-            </div>
-             <div class = "column">
-                <img src = "HPTCOS.jpg" atl = "Harry Potter and the Chamber of Secrets" width ="150" height="200" class="center">
-                <h2>Harry Potter and the Chamber of Secrets</h2>
-                <p>It's year two at Hogwarts, and Harry, Ron, and Hermione are back learning, but their year doesn't go passed quietly. Members of the school are turning up petrified and bloody writings are appearing on the walls, revealing to everyone, that someone has opened the Chamber of Secrets. The attacks continue, bringing the possibility of the closure of Hogwarts. Harry and his friends are now forced to secretly uncover the truth about the chamber before the school closes or any lives are taken.
-                </p>
-            </div>
-             <div class = "column">
-                <img src = "HPPOA.jpg" atl = "Harry Potter and the Prisoner of Azkaban" width ="150" height="200" class="center">
-                <h2>Harry Potter and the Prisoner of Azkaban    </h2>
-                <p>Harry Potter, Ron and Hermione return to Hogwarts School of Witchcraft and Wizardry for their third year of study, where they delve into the mystery surrounding an escaped prisoner who poses a dangerous threat to the young wizard.
-                </p>
-            </div>
-             <div class = "column">
-                <img src = "HPGOF.jpg" atl = "Harry Potter and the Goblet of Fire" width ="150" height="200" class="center">
-                <h2>Harry Potter and the Goblet of Fire</h2>
-                <p>The Tri-Wizard Tournament is open. Four champions are selected to compete in three terrifying tasks in order to win the Tri-Wizard Cup. Meanwhile, Harry Potter is selected by the Goblet of Fire to compete while struggling to keep up the pace with classes and friends. He must confront fierce dragons, aggressive mermaids, and a dark wizard that hasn't been able to make his move for thirteen years.
-                </p>
-            </div>
-         </div>
-    </aside>
-    </body>
-    </html>
+    {% endfor %}
+{% else %}
+    <div>Nothing here</div>
+{% endif %}
+
+<!--{% load static %}-->
+<!--<!DOCTYPE HTML>-->
+<!--<html lang="en">-->
+<!--    <head>-->
+<!--            <link rel="stylesheet" href="{% static 'store/css/home.css' %}">-->
+<!--			<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css%22%3E">-->
+<!--            <meta charset="utf-8">-->
+<!--            <title>My Bookstore</title>-->
+<!--    </head>-->
+<!--        <header>-->
+<!--            <a href="{% url 'home' %}" class="logo"><h1>The Bookstore</h1></a>-->
+<!--        <nav>-->
+<!--            <ul>-->
+<!--                <li><a href = "{% url 'home' %}">Home</a></li>-->
+<!--                {% if user.is_authenticated %}-->
+<!--                    <li><a href = "{% url 'logout' %}">Logout</a></li>-->
+<!--                    <li><a href = "{% url 'edit_profile' %}">Edit Profile</a></li>-->
+<!--                    <li><a href = "{% url 'myCart' %}">My Cart</a></li>-->
+<!--				    <li><a href = "{% url 'orderHistory' %}'">Order History</a></li>-->
+<!--                {% else %}-->
+<!--                    <li><a href = "{% url 'register' %}">Register</a></li>-->
+<!--                {% endif %}-->
+
+<!--            </ul>-->
+<!--            </nav></header>-->
+<!--        {% if messages %}-->
+<!--            {% for message in messages %}-->
+<!--                {{ message }}-->
+<!--            {% endfor %}-->
+<!--        {% endif %}-->
+<!--    <body>-->
+<!--        <h1>Featured Books</h1>-->
+<!--        <div style ="text-align: center"><input size = "150" type="text" id="search" name="search" placeholder="Search Books!">-->
+<!--        <button>Search</button>-->
+<!--        </div>-->
+<!--    <main>-->
+<!--        <h2> {{ books.sell_price }} </h2>-->
+<!--     <table border=1 frame=void rules=rows style="width:100%:">-->
+<!--         {% for book in books %}-->
+
+<!--            <colgroup>-->
+<!--                <col span="1" style="width: 20%;">-->
+<!--                <col span="1" style="width: 20%;">-->
+<!--                <col span="1" style="width: 40%;">-->
+<!--				<col span="1" style="width: 10%;">-->
+<!--				<col span="1" style="width: 10%;">-->
+<!--            </colgroup>-->
+<!--            <tr>-->
+<!--              <td><img src = {{ book.cover_picture }} atl = {{ book.title }} width = "10" height = "200" class="center"></td></td>-->
+<!--              <td><h3>{{ book.title }} </h3></td>-->
+<!--              <td> {{ book.description }} </td>-->
+<!--			<td>${{ book.sell_price }} <td>-->
+<!--			 <td><button class="buttons" onclick = "location.href={% url 'myCart' %};">Add to cart</button></td>-->
+<!--		   </tr>-->
+<!--         {% endfor %}-->
+<!--        </table>-->
+<!--        </main>-->
+<!--    </body>-->

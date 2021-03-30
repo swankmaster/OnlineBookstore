@@ -14,7 +14,7 @@
             </ul>
             </nav></header>
     <body>
-        <h2>Login</h2>
+        <h2>Login / Register</h2>
         <div class="login_row">
                 <h2>Register</h2>
                 <form method ="POST">
@@ -23,13 +23,13 @@
                                 {{ form.as_p }}
                         </fieldset>
                     <div>
-                        <button class="btn btn-outline-info" type="submit">Sign In</button>
+                        <button class="btn btn-outline-info" type="submit">Sign Up</button>
                     </div>
                 </form>
         </div>
         <div class="border-top pt-3">
             <small class="text-muted">
-                Need An Account? <a class="ml-2" href="{% url 'register' %}">Sign Up</a>
+                Already Have An Account? <a class="ml-2" href="{% url 'login' %}">Sign In</a>
             </small>
         </div>
     </body>
