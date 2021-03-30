@@ -106,7 +106,8 @@ class Transaction(models.Model):
 
 
 class Users(models.Model):
-    userid = models.IntegerField(db_column='userID', primary_key=True)  # Field name made lowercase.
+    userID = models.IntegerField(db_column='userID', primary_key=True)  # Field name made lowercase.
+    username = models.CharField(max_length=45,blank=True,null= True)
     first_name = models.CharField(max_length=45, blank=True, null=True)
     last_name = models.CharField(max_length=45, blank=True, null=True)
     email = models.CharField(max_length=45, blank=True, null=True)
