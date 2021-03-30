@@ -6,7 +6,7 @@
             <title>My Bookstore</title>
     </head>
         <header>
-            <a href="home.html"><h1>Welcome To Online Bookstore</h1></a>
+            <a href="home.html" class="logo"><h1>The Bookstore</h1></a>
         <nav>
             <ul>
                 <li><a href = "home.html">Home</a></li>
@@ -14,70 +14,100 @@
             </ul>
             </nav></header>
     <body>
-        <h1><u>Featured Books</u></h1>
-        <div style ="text-align: center"><input size = "150" type="text" id="search" name="search" placeholder="Search Books!">
+        <h1>Featured Books</h1>
+        <!--<div style ="text-align: center"><input size = "150" type="text" id="search" name="search" placeholder="Search Books!">
         <button>Search</button>
-        </div><br><br>
+        </div><br><br>-->
+		
+  <div class="wrapper">
+    <img class="search-icon" src="data:image/svg+xml;utf8;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iaXNvLTg4NTktMSI/Pgo8IS0tIEdlbmVyYXRvcjogQWRvYmUgSWxsdXN0cmF0b3IgMTkuMC4wLCBTVkcgRXhwb3J0IFBsdWctSW4gLiBTVkcgVmVyc2lvbjogNi4wMCBCdWlsZCAwKSAgLS0+CjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgdmVyc2lvbj0iMS4xIiBpZD0iQ2FwYV8xIiB4PSIwcHgiIHk9IjBweCIgdmlld0JveD0iMCAwIDU2Ljk2NiA1Ni45NjYiIHN0eWxlPSJlbmFibGUtYmFja2dyb3VuZDpuZXcgMCAwIDU2Ljk2NiA1Ni45NjY7IiB4bWw6c3BhY2U9InByZXNlcnZlIiB3aWR0aD0iMTZweCIgaGVpZ2h0PSIxNnB4Ij4KPHBhdGggZD0iTTU1LjE0Niw1MS44ODdMNDEuNTg4LDM3Ljc4NmMzLjQ4Ni00LjE0NCw1LjM5Ni05LjM1OCw1LjM5Ni0xNC43ODZjMC0xMi42ODItMTAuMzE4LTIzLTIzLTIzcy0yMywxMC4zMTgtMjMsMjMgIHMxMC4zMTgsMjMsMjMsMjNjNC43NjEsMCw5LjI5OC0xLjQzNiwxMy4xNzctNC4xNjJsMTMuNjYxLDE0LjIwOGMwLjU3MSwwLjU5MywxLjMzOSwwLjkyLDIuMTYyLDAuOTIgIGMwLjc3OSwwLDEuNTE4LTAuMjk3LDIuMDc5LTAuODM3QzU2LjI1NSw1NC45ODIsNTYuMjkzLDUzLjA4LDU1LjE0Niw1MS44ODd6IE0yMy45ODQsNmM5LjM3NCwwLDE3LDcuNjI2LDE3LDE3cy03LjYyNiwxNy0xNywxNyAgcy0xNy03LjYyNi0xNy0xN1MxNC42MSw2LDIzLjk4NCw2eiIgZmlsbD0iIzAwMDAwMCIvPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8L3N2Zz4K" />
+    <input class="search" placeholder="Search" type="text" >
+    <img class="clear-icon" src="data:image/svg+xml;utf8;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iaXNvLTg4NTktMSI/Pgo8IS0tIEdlbmVyYXRvcjogQWRvYmUgSWxsdXN0cmF0b3IgMTkuMC4wLCBTVkcgRXhwb3J0IFBsdWctSW4gLiBTVkcgVmVyc2lvbjogNi4wMCBCdWlsZCAwKSAgLS0+CjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgdmVyc2lvbj0iMS4xIiBpZD0iQ2FwYV8xIiB4PSIwcHgiIHk9IjBweCIgdmlld0JveD0iMCAwIDUxLjk3NiA1MS45NzYiIHN0eWxlPSJlbmFibGUtYmFja2dyb3VuZDpuZXcgMCAwIDUxLjk3NiA1MS45NzY7IiB4bWw6c3BhY2U9InByZXNlcnZlIiB3aWR0aD0iMTZweCIgaGVpZ2h0PSIxNnB4Ij4KPGc+Cgk8cGF0aCBkPSJNNDQuMzczLDcuNjAzYy0xMC4xMzctMTAuMTM3LTI2LjYzMi0xMC4xMzgtMzYuNzcsMGMtMTAuMTM4LDEwLjEzOC0xMC4xMzcsMjYuNjMyLDAsMzYuNzdzMjYuNjMyLDEwLjEzOCwzNi43NywwICAgQzU0LjUxLDM0LjIzNSw1NC41MSwxNy43NCw0NC4zNzMsNy42MDN6IE0zNi4yNDEsMzYuMjQxYy0wLjc4MSwwLjc4MS0yLjA0NywwLjc4MS0yLjgyOCwwbC03LjQyNS03LjQyNWwtNy43NzgsNy43NzggICBjLTAuNzgxLDAuNzgxLTIuMDQ3LDAuNzgxLTIuODI4LDBjLTAuNzgxLTAuNzgxLTAuNzgxLTIuMDQ3LDAtMi44MjhsNy43NzgtNy43NzhsLTcuNDI1LTcuNDI1Yy0wLjc4MS0wLjc4MS0wLjc4MS0yLjA0OCwwLTIuODI4ICAgYzAuNzgxLTAuNzgxLDIuMDQ3LTAuNzgxLDIuODI4LDBsNy40MjUsNy40MjVsNy4wNzEtNy4wNzFjMC43ODEtMC43ODEsMi4wNDctMC43ODEsMi44MjgsMGMwLjc4MSwwLjc4MSwwLjc4MSwyLjA0NywwLDIuODI4ICAgbC03LjA3MSw3LjA3MWw3LjQyNSw3LjQyNUMzNy4wMjIsMzQuMTk0LDM3LjAyMiwzNS40NiwzNi4yNDEsMzYuMjQxeiIgZmlsbD0iIzAwMDAwMCIvPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+Cjwvc3ZnPgo=" />
+  </div>  
+
     <main>
-     <div class = "row">
-        <div class = "column">
-            <img src = "PJTLT.jpg" atl = "Percy Jackson: The Lightning Thief" width = "150" height = "200" class="center">
-            <h2>Percy Jackson: The Lightning Thief</h2>
-            <p>$10</p>
-            <p>Twelve-year-old Percy Jackson is on the most dangerous quest of his life. With the help of a satyr and a daughter of Athena, Percy must journey across the United States to catch a thief who has stolen the original weapon of mass destruction — Zeus’ master bolt. Along the way, he must face a host of mythological enemies determined to stop him. Most of all, he must come to terms with a father he has never known, and an Oracle that has warned him of betrayal by a friend.
-            </p>
-        </div>
-         <div class = "column">
-            <img src = "PJTSOFM.jpg" atl = "Percy Jackson: Sea of Monsters" width ="150" height="200" class="center">
-            <h2>Percy Jackson: Sea of Monsters</h2>
-            <p>$10</p>
-            <p>When Thalia’s tree is mysteriously poisoned, the magical borders of Camp Half-Blood begin to fail. Now Percy and his friends have just days to find the only magic item powerful to save the camp before it is overrun by monsters. The catch: they must sail into the Sea of Monsters to find it. Along the way, Percy must stage a daring rescue operation to save his old friend Grover, and he learns a terrible secret about his own family, which makes him question whether being the son of Poseidon is an honor or a curse.
-            </p>
-        </div>
-         <div class = "column">
-            <img src = "PJTTC.jpg" atl = "Percy Jackson: The Titans Curse" width ="150" height="200" class="center">
-            <h2>Percy Jackson: The Titans Curse</h2>
-            <p>$10</p>
-            <p>When Percy Jackson gets an urgent distress call from his friend Grover, he immediately prepares for battle. He knows he will need his powerful demigod allies at his side, his trusty bronze sword Riptide, and… a ride from his mom.
-            </p>
-        </div>
-         <div class = "column">
-            <img src = "PJTBOTL.jpg" atl = "Percy Jackson: The Battle of the Labyrinth" width ="150" height="200" class="center">
-            <h2>Percy Jackson: The Battle of the Labyrinth</h2>
-            <p>$10</p>
-            <p>Percy Jackson isn’t expecting freshman orientation to be any fun, but when a mysterious mortal acquaintance appears, pursued by demon cheerleaders, things quickly go from bad to worse.
-            </p>
-        </div>
-     </div>
-     </main>
+        <table border=1 frame=void rules=rows style="width:100%">
+            <colgroup>
+                <col span="1" style="width: 20%;">
+                <col span="1" style="width: 20%;">
+                <col span="1" style="width: 60%;">
+            </colgroup>
+            <tr>
+              <td><img src = "PJTLT.jpg" atl = "Percy Jackson: The Lightning Thief" width = "10" height = "200" class="center"></td>
+              <td><h3>Percy Jackson: The Lightning Thief</h3></td>
+              <td>Twelve-year-old Percy Jackson is on the most dangerous quest of his life. With the help of a satyr and a daughter of Athena, Percy must journey across the United States to catch a thief who has stolen the original weapon of mass destruction — Zeus’ master bolt. Along the way, he must face a host of mythological enemies determined to stop him. Most of all, he must come to terms with a father he has never known, and an Oracle that has warned him of betrayal by a friend.</td>
+            </tr>
+			</table>
+			<br>
+			<table border=1 frame=void rules=rows style="width:100%">
+            <colgroup>
+                <col span="1" style="width: 20%;">
+                <col span="1" style="width: 20%;">
+                <col span="1" style="width: 60%;">
+            </colgroup>
+            <tr>
+              <td><img src = "PJTSOFM.jpg" atl = "Percy Jackson: Sea of Monsters" width = "10" height = "200" class="center"></td></td>
+              <td><h3>Percy Jackson: Sea of Monsters</h3></td>
+              <td>When Thalia’s tree is mysteriously poisoned, the magical borders of Camp Half-Blood begin to fail. Now Percy and his friends have just days to find the only magic item powerful to save the camp before it is overrun by monsters. The catch: they must sail into the Sea of Monsters to find it. Along the way, Percy must stage a daring rescue operation to save his old friend Grover, and he learns a terrible secret about his own family, which makes him question whether being the son of Poseidon is an honor or a curse.</td>
+            </tr>
+			</table>
+			<br>
+			<table border=1 frame=void rules=rows style="width:100%">
+            <colgroup>
+                <col span="1" style="width: 20%;">
+                <col span="1" style="width: 20%;">
+                <col span="1" style="width: 60%;">
+            </colgroup>
+            <tr>
+              <td><img src = "PJTTC.jpg" atl = "Percy Jackson: The Titans Curse" width = "10" height = "200" class="center"></td></td></td>
+              <td><h3>Percy Jackson: The Titans Curse</h3></td>
+              <td>When Percy Jackson gets an urgent distress call from his friend Grover, he immediately prepares for battle. He knows he will need his powerful demigod allies at his side, his trusty bronze sword Riptide, and… a ride from his mom.</td>
+            </tr>
+			</table>
+			<br>
+			<table border=1 frame=void rules=rows style="width:100%">
+            <colgroup>
+                <col span="1" style="width: 20%;">
+                <col span="1" style="width: 20%;">
+                <col span="1" style="width: 60%;">
+            </colgroup>
+            <tr>
+                <td><img src = "PJTBOTL.jpg" atl = "Percy Jackson: The Battle of the Labyrinth" width = "10" height = "200" class="center"></td></td></td>
+                <td><h3>Percy Jackson: The Battle of the Labyrinth</h3></td>
+                <td>Percy Jackson isn’t expecting freshman orientation to be any fun, but when a mysterious mortal acquaintance appears, pursued by demon cheerleaders, things quickly go from bad to worse.</td>
+              </tr>
+          </table>
+		  <br>
+    </main>
     <aside>
-        <h1 class="coming"><u>Coming Soon!</u></h1>
-        <div class = "row">
-            <div class = "column">
-                <img src = "HPTSS.jpg" atl = "Harry Potter and The Sorcerer's Stone" width = "150" height = "200" class="center">
-                <h2>Harry Potter and The Sorcerer's Stone</h2>
-                <p>At the beginning of the novel, Harry Potter is living in a cupboard under the stairs, suffering appalling maltreatment at the hands of the Dursley family, to whose care he was confided as an infant following the death of his parents; his mother was Mrs. Dursley’s sister. On his eleventh birthday, however, it is revealed to him, despite the Dursleys’ best efforts, that he has inherited magical abilities and is scheduled for education in wizardry at Hogwarts Academy, a key pillar of the British magical community, which lives in strict covert isolation from untalented “muggles.” This message is delivered by the intimidating Hagrid, who lives on the school grounds on the edge of a Forbidden Forest. Hagrid, who is fascinated by all manner of magical creatures, becomes Harry’s first fast friend.
-                </p>
-            </div>
-             <div class = "column">
-                <img src = "HPTCOS.jpg" atl = "Harry Potter and the Chamber of Secrets" width ="150" height="200" class="center">
-                <h2>Harry Potter and the Chamber of Secrets</h2>
-                <p>It's year two at Hogwarts, and Harry, Ron, and Hermione are back learning, but their year doesn't go passed quietly. Members of the school are turning up petrified and bloody writings are appearing on the walls, revealing to everyone, that someone has opened the Chamber of Secrets. The attacks continue, bringing the possibility of the closure of Hogwarts. Harry and his friends are now forced to secretly uncover the truth about the chamber before the school closes or any lives are taken.
-                </p>
-            </div>
-             <div class = "column">
-                <img src = "HPPOA.jpg" atl = "Harry Potter and the Prisoner of Azkaban" width ="150" height="200" class="center">
-                <h2>Harry Potter and the Prisoner of Azkaban    </h2>
-                <p>Harry Potter, Ron and Hermione return to Hogwarts School of Witchcraft and Wizardry for their third year of study, where they delve into the mystery surrounding an escaped prisoner who poses a dangerous threat to the young wizard.
-                </p>
-            </div>
-             <div class = "column">
-                <img src = "HPGOF.jpg" atl = "Harry Potter and the Goblet of Fire" width ="150" height="200" class="center">
-                <h2>Harry Potter and the Goblet of Fire</h2>
-                <p>The Tri-Wizard Tournament is open. Four champions are selected to compete in three terrifying tasks in order to win the Tri-Wizard Cup. Meanwhile, Harry Potter is selected by the Goblet of Fire to compete while struggling to keep up the pace with classes and friends. He must confront fierce dragons, aggressive mermaids, and a dark wizard that hasn't been able to make his move for thirteen years.
-                </p>
-            </div>
-         </div>
+        <h1 class="coming">Coming Soon!</h1>
+        <table border=1 frame=void rules=rows style="width:100%">
+            <colgroup>
+                <col span="1" style="width: 20%;">
+                <col span="1" style="width: 20%;">
+                <col span="1" style="width: 60%;">
+            </colgroup>
+            <tr>
+              <td><img src = "HPTSS.jpg" atl = "Harry Potter and The Sorcerer's Stone" width = "10" height = "200" class="center"></td>
+              <td><h3>Harry Potter and The Sorcerer's Stone</h3></td>
+              <td>At the beginning of the novel, Harry Potter is living in a cupboard under the stairs, suffering appalling maltreatment at the hands of the Dursley family, to whose care he was confided as an infant following the death of his parents; his mother was Mrs. Dursley’s sister. On his eleventh birthday, however, it is revealed to him, despite the Dursleys’ best efforts, that he has inherited magical abilities and is scheduled for education in wizardry at Hogwarts Academy, a key pillar of the British magical community, which lives in strict covert isolation from untalented “muggles.” This message is delivered by the intimidating Hagrid, who lives on the school grounds on the edge of a Forbidden Forest. Hagrid, who is fascinated by all manner of magical creatures, becomes Harry’s first fast friend.</td>
+            </tr>
+            <tr>
+              <td><img src = "HPTCOS.jpg" atl = "Harry Potter and the Chamber of Secrets" width = "10" height = "200" class="center"></td></td>
+              <td><h3>Harry Potter and the Chamber of Secrets</h3></td>
+              <td>It's year two at Hogwarts, and Harry, Ron, and Hermione are back learning, but their year doesn't go passed quietly. Members of the school are turning up petrified and bloody writings are appearing on the walls, revealing to everyone, that someone has opened the Chamber of Secrets. The attacks continue, bringing the possibility of the closure of Hogwarts. Harry and his friends are now forced to secretly uncover the truth about the chamber before the school closes or any lives are taken.</td>
+            </tr>
+            <tr>
+              <td><img src = "HPPOA.jpg" atl = "Harry Potter and the Prisoner of Azkaban" width = "10" height = "200" class="center"></td></td></td>
+              <td><h3>Harry Potter and the Prisoner of Azkaban</h3></td>
+              <td>Harry Potter, Ron and Hermione return to Hogwarts School of Witchcraft and Wizardry for their third year of study, where they delve into the mystery surrounding an escaped prisoner who poses a dangerous threat to the young wizard.</td>
+            </tr>
+            <tr>
+                <td><img src = "HPGOF.jpg" atl = "Harry Potter and the Goblet of Fire" width = "10" height = "200" class="center"></td></td></td>
+                <td><h3>Harry Potter and the Goblet of Fire</h3></td>
+                <td>The Tri-Wizard Tournament is open. Four champions are selected to compete in three terrifying tasks in order to win the Tri-Wizard Cup. Meanwhile, Harry Potter is selected by the Goblet of Fire to compete while struggling to keep up the pace with classes and friends. He must confront fierce dragons, aggressive mermaids, and a dark wizard that hasn't been able to make his move for thirteen years.</td>
+              </tr>
+          </table>
     </aside>
     </body>
     </html>
