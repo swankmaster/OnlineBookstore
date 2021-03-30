@@ -1,40 +1,12 @@
+{% extends "store/base.html" %}
 {% load static %}
-<!DOCTYPE HTML>
-<html lang="en">
-    <head>
-            <link rel="stylesheet" href="{% static 'store/css/home.css' %}">
-			<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css%22%3E">
-            <meta charset="utf-8">
-            <title>My Bookstore</title>
-    </head>
-        <header>
-            <a href="{% url 'home' %}" class="logo"><h1>The Bookstore</h1></a>
-        <nav>
-            <ul>
-                <li><a href = "{% url 'home' %}">Home</a></li>
-                {% if user.is_authenticated %}
-                    <li><a href = "{% url 'logout' %}">Logout</a></li>
-                    <li><a href = "{% url 'edit_profile' %}">Edit Profile</a></li>
-                    <li><a href = "{% url 'myCart' %}">My Cart</a></li>
-				    <li><a href = "{% url 'orderHistory' %}'">Order History</a></li>
-                {% else %}
-                    <li><a href = "{% url 'register' %}">Login/Register</a></li>
-                {% endif %}
-
-            </ul>
-            </nav></header>
-        {% if messages %}
-            {% for message in messages %}
-                {{ message }}
-            {% endfor %}
-        {% endif %}
-    <body>
-        <h1>Featured Books</h1>
-        <div style ="text-align: center"><input size = "150" type="text" id="search" name="search" placeholder="Search Books!">
+{% block content %}
+    <h1>Featured Books</h1>
+    <div style ="text-align: center"><input size = "150" type="text" id="search" name="search" placeholder="Search Books!">
         <button>Search</button>
-        </div>
+    </div>
     <main>
-     <table border=1 frame=void rules=rows style="width:100%:">
+        <table border=1 frame=void rules=rows style="width:100%:">
          {% for book in books %}
             <colgroup>
                 <col span="1" style="width: 20%;">
@@ -52,5 +24,5 @@
 		   </tr>
          {% endfor %}
         </table>
-        </main>
-    </body>
+    </main>
+{% endblock content%}

@@ -6,7 +6,9 @@
 #   * Remove `managed = False` lines if you wish to allow Django to create, modify, and delete the table
 # Feel free to rename the models, but don't rename db_table values or field names.
 from django.db import models
-
+from django.contrib.auth.models import User
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 
 class Book(models.Model):
     bookid = models.IntegerField(db_column='bookID', primary_key=True)  # Field name made lowercase.
@@ -32,7 +34,7 @@ class Book(models.Model):
 
 class Cart(models.Model):
     cart_id = models.IntegerField(primary_key=True)
-    users_userid = models.ForeignKey('Users', models.DO_NOTHING, db_column='Users_userID')  # Field name made lowercase.
+    user1_user_id = models.ForeignKey('User1', models.DO_NOTHING, default="", db_column='User1_user_id')  # Field name made lowercase.
 
     class Meta:
         managed = True
@@ -60,7 +62,7 @@ class InventoryBook(models.Model):
 
 class Order(models.Model):
     order_id = models.IntegerField(primary_key=True)
-    users_userid = models.ForeignKey('Users', models.DO_NOTHING, db_column='Users_userID')  # Field name made lowercase.
+    user1_user_id = models.ForeignKey('User1', models.DO_NOTHING,  default="", db_column='User1_user_id')  # Field name made lowercase.
     paymentcard_card_number = models.ForeignKey('Paymentcard', models.DO_NOTHING, db_column='PaymentCard_card_number')  # Field name made lowercase.
     total = models.CharField(max_length=45, blank=True, null=True)
     promotion_promo = models.ForeignKey('Promotion', models.DO_NOTHING, db_column='Promotion_promo_id')  # Field name made lowercase.
@@ -76,7 +78,7 @@ class Paymentcard(models.Model):
     type = models.CharField(max_length=45, blank=True, null=True)
     expiration_date = models.CharField(max_length=45, blank=True, null=True)
     billing_address = models.CharField(max_length=45, blank=True, null=True)
-    users_userid = models.ForeignKey('Users', models.DO_NOTHING, db_column='Users_userID')  # Field name made lowercase.
+    user1_user_id = models.ForeignKey('User1', models.DO_NOTHING,  default="", db_column='User1_user_id')  # Field name made lowercase.
 
     class Meta:
         managed = True
@@ -96,8 +98,8 @@ class Promotion(models.Model):
 
 class Transaction(models.Model):
     transaction_id = models.IntegerField(primary_key=True)
-    book_bookid = models.ForeignKey(Book, models.DO_NOTHING, db_column='Book_bookID')  # Field name made lowercase.
-    order_order = models.ForeignKey(Order, models.DO_NOTHING, db_column='Order_order_id')  # Field name made lowercase.
+    book_bookid = models.ForeignKey(Book, models.DO_NOTHING,  default="", db_column='Book_bookID')  # Field name made lowercase.
+    order_order = models.ForeignKey(Order, models.DO_NOTHING,  default="", db_column='Order_order_id')  # Field name made lowercase.
     quantity = models.CharField(max_length=45)
 
     class Meta:
@@ -105,18 +107,31 @@ class Transaction(models.Model):
         db_table = 'Transaction'
 
 
-class Users(models.Model):
-    userID = models.IntegerField(db_column='userID', primary_key=True)  # Field name made lowercase.
-    username = models.CharField(max_length=45,blank=True,null= True)
-    first_name = models.CharField(max_length=45, blank=True, null=True)
-    last_name = models.CharField(max_length=45, blank=True, null=True)
-    email = models.CharField(max_length=45, blank=True, null=True)
-    password = models.CharField(max_length=45, blank=True, null=True)
+class User1(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    # userID = models.IntegerField(db_column='userID', primary_key=True)  # Field name made lowercase.
+    # username = models.CharField(max_length=45,blank=True,null= True)
+    # first_name = models.CharField(max_length=45, blank=True, null=True)
+    # last_name = models.CharField(max_length=45, blank=True, null=True)
+    # email = models.CharField(max_length=45, blank=True, null=True)
+    # password = models.CharField(max_length=45, blank=True, null=True)
     phone = models.CharField(max_length=45, blank=True, null=True)
     status = models.CharField(max_length=45, blank=True, null=True)
     usertype = models.CharField(db_column='userType', max_length=45, blank=True, null=True)  # Field name made lowercase.
-    userscol = models.CharField(db_column='Userscol', max_length=45, blank=True, null=True)  # Field name made lowercase.
+    usercol = models.CharField(db_column='Usercol', max_length=45, blank=True, null=True)  # Field name made lowercase.
+
+    # def __str__(self):
+    #     return self.user.username
 
     class Meta:
         managed = True
-        db_table = 'Users'
+        db_table = 'User1'
+
+# @receiver(post_save, sender=User)
+# def create_user_profile(sender, instance, created, **kwargs):
+#     if created:
+#         User1.objects.create(user=instance)
+#
+# @receiver(post_save, sender=User)
+# def save_user_profile(sender, instance, **kwargs):
+#     instance.user1.save()
