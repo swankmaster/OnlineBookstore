@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
-from .models import User1
+from .models import User1, PaymentCard
 
 class UserRegisterForm(UserCreationForm):
     email = forms.EmailField(required=True)
@@ -10,7 +10,7 @@ class UserRegisterForm(UserCreationForm):
 
     class Meta:
         model = User
-        fields = ('first_name', 'last_name', 'email', 'username', 'password1', 'password2')
+        fields = ('first_name', 'last_name', 'username', 'email', 'password1', 'password2')
 
     def save(self, commit=True):
         user = super().save(commit=False)
@@ -30,3 +30,44 @@ class User1RegisterForm(forms.ModelForm):
         model = User1
         fields = ('phone',)
 
+class UpdateUserInfoForm(forms.ModelForm):
+    first_name = forms.CharField()
+    last_name = forms.CharField()
+    username = forms.CharField()
+    email = forms.EmailField()
+
+    class Meta:
+        model = User
+        fields = ('first_name', 'last_name', 'username', 'email')
+
+class UpdateUser1InfoForm(forms.ModelForm):
+    phone = forms.IntegerField()
+
+    class Meta:
+        model = User1
+        fields = ('phone',)
+
+class UpdateUserPassword(forms.ModelForm):
+    old_password = forms.PasswordInput()
+    password = forms.PasswordInput()
+
+    class Meta:
+        model = User
+        exclude = ('old_password',)
+        fields = ('old_password', 'password')
+
+# class UpdatePaymentInfoForm(forms.ModelForm):
+#     TYPE_CHOICES = (
+#         ('Visa'),
+#         ('MasterCard'),
+#         ('Amex'),
+#         ('Paypal'),
+#     )
+#     type = forms.ChoiceField(choices=TYPE_CHOICES)
+#     card_num = forms.IntegerField(label='Card Number:')
+#     exp_date = forms.DateField(label='Expiration Data')
+#     cvv = forms.IntegerField(label='CVV')
+#
+#     class Meta:
+#         model = PaymentCard
+#         fields = ('first_name', 'last_name', 'username', 'email', 'password')

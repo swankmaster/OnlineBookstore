@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib import messages
-from .forms import UserRegisterForm, User1RegisterForm
+from .forms import UserRegisterForm, User1RegisterForm, UpdateUserInfoForm, UpdateUser1InfoForm, UpdateUserPassword
 from .models import Book
 
 # Create your views here.
@@ -35,12 +35,34 @@ def register(request):
 
 
 def edit_profile(request):
-    return render(request, 'store/edit_profile.html')
+    if request.method == 'POST':
+        u_form = UpdateUserInfoForm(request.POST, instance=request.user)
+        u1_form = UpdateUser1InfoForm(request.POST, instance=request.user.user1)
+        if u_form.is_valid() and u1_form.is_valid():
+            u_form.save()
+            u1_form.save()
+
+    else:
+        u_form = UpdateUserInfoForm(instance=request.user)
+        u1_form = UpdateUser1InfoForm(instance=request.user.user1)
+
+    context = {
+        'u_form': u_form,
+        'u1_form': u1_form
+    }
+    return render(request, 'store/edit_profile.html', context)
 
 
 def myCart(request):
     return render(request, 'store/myCart.html')
 
-
 def orderHistory(request):
     return render(request, 'store/orderHistory.html')
+
+def checkout(request):
+    return render(request, 'store/checkout.html')
+
+def checkoutConfirmation(request):
+    return render(request, 'store/checkoutConfirmation.html')
+
+

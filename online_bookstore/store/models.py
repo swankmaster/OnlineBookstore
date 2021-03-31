@@ -63,7 +63,7 @@ class InventoryBook(models.Model):
 class Order(models.Model):
     order_id = models.IntegerField(primary_key=True)
     user1_user_id = models.ForeignKey('User1', models.DO_NOTHING,  default="", db_column='User1_user_id')  # Field name made lowercase.
-    paymentcard_card_number = models.ForeignKey('Paymentcard', models.DO_NOTHING, db_column='PaymentCard_card_number')  # Field name made lowercase.
+    paymentCard_card_number = models.ForeignKey('Paymentcard', models.DO_NOTHING, db_column='PaymentCard_card_number')  # Field name made lowercase.
     total = models.CharField(max_length=45, blank=True, null=True)
     promotion_promo = models.ForeignKey('Promotion', models.DO_NOTHING, db_column='Promotion_promo_id')  # Field name made lowercase.
     order_datetime = models.DateTimeField(blank=True, null=True)
@@ -73,9 +73,10 @@ class Order(models.Model):
         db_table = 'Order'
 
 
-class Paymentcard(models.Model):
+class PaymentCard(models.Model):
     card_number = models.IntegerField(primary_key=True)
     type = models.CharField(max_length=45, blank=True, null=True)
+    cvv = models.IntegerField(blank=True, null=True)
     expiration_date = models.CharField(max_length=45, blank=True, null=True)
     billing_address = models.CharField(max_length=45, blank=True, null=True)
     user1_user_id = models.ForeignKey('User1', models.DO_NOTHING,  default="", db_column='User1_user_id')  # Field name made lowercase.

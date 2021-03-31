@@ -1,0 +1,23 @@
+{% extends "store/base.html" %}
+{% load static %}
+{% block content %}
+        <div class = "column" id = "P1">
+            <img src = "PJTLT.jpg" atl = "Percy Jackson: The Lightning Thief" width = "150" height = "200">
+            <h2>Percy Jackson: The Lightning Thief</h2>
+            <p>$10</p>
+            <p>Twelve-year-old Percy Jackson is on the most dangerous quest of his life. With the help of a satyr and a daughter of Athena, Percy must journey across the United States to catch a thief who has stolen the original weapon of mass destruction — Zeus’ master bolt. Along the way, he must face a host of mythological enemies determined to stop him. Most of all, he must come to terms with a father he has never known, and an Oracle that has warned him of betrayal by a friend.
+            </p>
+			<p><button onclick="myFunction()">Delete</button></p>
+            <p><button onclick="location.href={% url 'checkout' %}">Checkout</button></p>
+        </div>
+		<script>
+			function myFunction() {
+			var x = document.getElementById("P1");
+			if (x.style.display === "none") {
+				x.style.display = "block";
+			} else {
+				x.style.display = "none";
+			}
+			}
+		</script>
+{% endblock content%}

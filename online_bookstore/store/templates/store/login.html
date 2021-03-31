@@ -1,23 +1,10 @@
+{% extends "store/base.html" %}
 {% load static %}
-<!DOCTYPE HTML>
-<html lang="en">
-    <head>
-            <link rel="stylesheet" href="{% static 'store/css/home.css' %}">
-            <meta charset="utf-8">
-            <title>My Bookstore</title>
-    </head>
-        <header>
-        <nav>
-            <ul>
-                <li><a href = "{% url 'home' %}">Home</a></li>
-                <li><a href = "{% url 'register' %}">Login/Register</a></li>
-            </ul>
-            </nav></header>
-    <body>
+{% load crispy_forms_tags %}
+{% block content %}
         <h2>Login</h2>
         <div class="login_row">
-                <h2>Register</h2>
-                <form method ="POST">
+                <form method ="POST" class="loginfrm">
                     {% csrf_token %}
                         <fieldset>
                                 {{ form.as_p }}
@@ -28,9 +15,8 @@
                 </form>
         </div>
         <div class="border-top pt-3">
-            <small class="text-muted">
+            <large class="text-muted">
                 Need An Account? <a class="ml-2" href="{% url 'register' %}">Sign Up</a>
-            </small>
+            </large>
         </div>
-    </body>
-</html>
+{% endblock content%}
