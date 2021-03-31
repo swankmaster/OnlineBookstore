@@ -8,21 +8,38 @@
     <main>
         <table border=1 frame=void rules=rows style="width:100%:">
          {% for book in books %}
+                <colgroup>
+                    <col span="1" style="width: 20%;">
+                    <col span="1" style="width: 20%;">
+                    <col span="1" style="width: 40%;">
+                    <col span="1" style="width: 10%;">
+                    <col span="1" style="width: 10%;">
+                </colgroup>
+                <tr>
+                  <td><img src = "{% static 'store/images/' %}{{ book.cover_picture }}"  atl = {{ book.title }} width = "10" height = "200" class="center"></td></td>
+                  <td><h3>{{ book.title }} </h3></td>
+                  <td> {{ book.description }} </td>
+                <td>${{ book.sell_price }} <td>
+                 <td><button class="buttons" onclick = "location.href={% url 'home' %};">Add to cart</button></td>
+               </tr>
+            {% endfor %}
+        </table>
+    </main>
+<aside>
+        <h1 class="coming">Coming Soon!</h1>
+        <table border=1 frame=void rules=rows style="width:100%">
+         {% for book in coming_soon %}
             <colgroup>
                 <col span="1" style="width: 20%;">
                 <col span="1" style="width: 20%;">
-                <col span="1" style="width: 40%;">
-				<col span="1" style="width: 10%;">
-				<col span="1" style="width: 10%;">
+                <col span="1" style="width: 60%;">
             </colgroup>
             <tr>
-              <td><img src = "{% static 'store/images/' %}{{ book.cover_picture }}"  atl = {{ book.title }} width = "10" height = "200" class="center"></td></td>
+              <td><img src = "{% static 'store/images/' %}{{ book.cover_picture }}"  atl = {{ book.title }} width = "10" height = "200" class="center"></td>
               <td><h3>{{ book.title }} </h3></td>
-              <td> {{ book.description }} </td>
-			<td>${{ book.sell_price }} <td>
-			 <td><button class="buttons" onclick = "location.href={% url 'home' %};">Add to cart</button></td>
-		   </tr>
-         {% endfor %}
+                <td> {{ book.description }} </td>
+            </tr>
+          {% endfor %}
         </table>
-    </main>
+</aside>
 {% endblock content%}

@@ -8,7 +8,9 @@ from .models import Book
 # Create your views here.
 def home(request):
     context = {
-        'books': Book.objects.all()
+        'books': Book.objects.all().exclude(quantity='0'),
+        'coming_soon': Book.objects.all().filter(quantity='0')
+
     }
 
     return render(request, 'store/home.html', context)
