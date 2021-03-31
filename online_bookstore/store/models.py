@@ -12,11 +12,11 @@ from django.dispatch import receiver
 
 class Book(models.Model):
     bookid = models.IntegerField(db_column='bookID', primary_key=True)  # Field name made lowercase.
-    title = models.CharField(max_length=45, blank=True, null=True)
+    title = models.CharField(max_length=2000, blank=True, null=True)
     isbn = models.CharField(db_column='ISBN', max_length=45, blank=True, null=True)  # Field name made lowercase.
     author = models.CharField(max_length=45, blank=True, null=True)
     category = models.CharField(max_length=45, blank=True, null=True)
-    description = models.CharField(max_length=45, blank=True, null=True)
+    description = models.CharField(max_length=2000, blank=True, null=True)
     cover_picture = models.CharField(max_length=45, blank=True, null=True)
     year = models.CharField(max_length=45, blank=True, null=True)
     buy_price = models.CharField(max_length=45, blank=True, null=True)
