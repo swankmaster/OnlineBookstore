@@ -1,7 +1,12 @@
 from django import forms
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
+from django.forms import ModelForm
+
+from .fields import CreditCardField
 from .models import User1, PaymentCard
+from django.forms.widgets import TextInput
+from django.utils.translation import ugettext_lazy as _
 
 class UserRegisterForm(UserCreationForm):
     email = forms.EmailField(required=True)
@@ -55,6 +60,15 @@ class UpdateUserPassword(forms.ModelForm):
         model = User
         exclude = ('old_password',)
         fields = ('old_password', 'password')
+
+class CreditCardForm(forms.ModelForm):
+    card_number = CreditCardField(placeholder=u'0000 0000 0000 0000', min_length=12, max_length=19)
+    expiration_date = forms.DateInput(format='%m/%y')
+    cvv = forms.IntegerField(label = 'CVV')
+
+    class Meta:
+        model = PaymentCard
+        fields = ('card_number','expiration_date','cvv')
 
 # class UpdatePaymentInfoForm(forms.ModelForm):
 #     TYPE_CHOICES = (

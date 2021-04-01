@@ -2,7 +2,8 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib import messages
-from .forms import UserRegisterForm, User1RegisterForm, UpdateUserInfoForm, UpdateUser1InfoForm, UpdateUserPassword
+from .forms import UserRegisterForm, User1RegisterForm, UpdateUserInfoForm, UpdateUser1InfoForm, UpdateUserPassword, \
+    CreditCardForm
 from .models import Book
 
 # Create your views here.
@@ -53,6 +54,16 @@ def edit_profile(request):
         'u1_form': u1_form
     }
     return render(request, 'store/edit_profile.html', context)
+
+def create_payment(request):
+    if request.method == 'GET':
+        p_form = CreditCardForm(request.GET)
+        if p_form.is_valid():
+            payment = p_form.save()
+    else:
+        p_form = CreditCardForm()
+        return render(request, 'store/payment.html', {'p_form': p_form})
+    return render(request,'store/payment.html',{'p_form':p_form})
 
 
 def myCart(request):
