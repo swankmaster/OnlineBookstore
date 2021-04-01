@@ -20,7 +20,9 @@
                   <td><h3>{{ book.title }} </h3></td>
                   <td> {{ book.description }} </td>
                 <td>${{ book.sell_price }} <td>
-                 <td><button class="buttons" onclick = "location.href={% url 'home' %};">Add to cart</button></td>
+                    {% if user.is_authenticated %}
+                        <button class="btn btn-outline-info" name="addToCart" onclick = "location.href={% url 'home' %};"><img src = "{% static 'store/images/cart.png' %}" width = "25" height = "25"></button>
+                    {% endif %}
                </tr>
             {% endfor %}
         </table>

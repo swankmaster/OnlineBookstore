@@ -74,7 +74,7 @@ class Order(models.Model):
 
 
 class PaymentCard(models.Model):
-    card_number = models.IntegerField(primary_key=True)
+    card_number = models.CharField(max_length=16, primary_key=True)
     type = models.CharField(max_length=45, blank=True, null=True)
     cvv = models.IntegerField(blank=True, null=True)
     expiration_date = models.CharField(max_length=45, blank=True, null=True)
@@ -110,6 +110,7 @@ class Transaction(models.Model):
 
 class User1(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
+
     # userID = models.IntegerField(db_column='userID', primary_key=True)  # Field name made lowercase.
     # username = models.CharField(max_length=45,blank=True,null= True)
     # first_name = models.CharField(max_length=45, blank=True, null=True)

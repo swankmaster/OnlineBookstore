@@ -3,6 +3,14 @@
   float: right;
   width: 23%;
   padding: 10px;
+  margin-right: 145px;
+}
+
+.column1 {
+  float: right;
+  width: 23%;
+  padding: 10px;
+  margin-right: 48em;
 }
 
 /* Clear floats after the columns */
@@ -49,12 +57,16 @@ h1{
 .button_color button:hover {
   opacity: 0.7;
 }
+
+nav {
+    background-color: #333;
+}
+
 ul {
   list-style-type: none;
   margin: 0;
   padding: 0;
   overflow: hidden;
-  background-color: #333;
 }
 
 li {
@@ -105,6 +117,11 @@ html{
   text-align:center;
   margin-left:40%;
   border-radius:50px;
+}
+
+.helptext {
+    margin: 5px;
+    color: black;
 }
 
   .wrapper {

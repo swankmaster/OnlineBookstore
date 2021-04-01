@@ -4,8 +4,9 @@
 {% block content %}
         <h2>Login</h2>
         <div class="login_row">
-                <form method ="POST" class="loginfrm">
+                <form method ="POST">
                     {% csrf_token %}
+                    <legend>Login Here</legend>
                         <fieldset>
                                 {{ form.as_p }}
                         </fieldset>
@@ -17,6 +18,7 @@
         <div class="border-top pt-3">
             <large class="text-muted">
                 Need An Account? <a class="ml-2" href="{% url 'register' %}">Sign Up</a>
+                <br>Reset Password. <a class="ml-2" href="{% url 'password_reset' %}">Reset Now</a>
             </large>
         </div>
 {% endblock content%}
