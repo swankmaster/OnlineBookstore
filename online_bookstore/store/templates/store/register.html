@@ -9,15 +9,16 @@
                         <fieldset>
                                 {{ form.as_p }}
                                 {{ form1.as_p }}
+                            <button class="btn btn-outline-info" type="submit">Sign Up</button>
                         </fieldset>
                     <div>
-                        <button class="btn btn-outline-info" type="submit">Sign Up</button>
+
                     </div>
                 </form>
         </div>
         <div class="border-top pt-3">
             <large class="text-muted">
-                Already Have An Account? <a class="ml-2" href="{% url 'login' %}">Sign In</a>
+                &nbsp&nbsp&nbspAlready Have An Account? <a class="ml-2" href="{% url 'login' %}">Sign In</a>
             </large>
         </div>
 {% endblock content%}

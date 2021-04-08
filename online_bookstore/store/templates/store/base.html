@@ -9,6 +9,11 @@
     </head>
         <header>
             <a href="{% url 'home' %}" class="logo"><h1>The Bookstore</h1></a>
+            {% if user.is_authenticated %}
+            <div>
+                &nbspLogged in as {{ user.username }}
+            </div>
+            {% endif %}
         <nav>
             <ul>
                 <li><a href = "{% url 'home' %}">Home</a></li>
@@ -17,6 +22,13 @@
                     <li><a href = "{% url 'myCart' %}">My Cart</a></li>
 				    <li><a href = "{% url 'orderHistory' %}">Order History</a></li>
                     <li><a href = "{% url 'logout' %}">Logout</a></li>
+                    {% if request.user.is_superuser %}
+                        <li>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp</li>
+                        <li><a href = "/admin">Admin Panel</a></li>
+                        <li><a href = "/admin/store/book/">Manage Books</a></li>
+                        <li><a href = "/admin/auth/user/">Manage Users</a></li>
+                        <li><a href = "/admin/store/promotion/">Manage Promos</a></li>
+                    {% endif %}
                 {% else %}
                     <li><a href = "{% url 'register' %}">Login/Register</a></li>
                 {% endif %}
@@ -25,7 +37,7 @@
             </nav></header>
         {% if messages %}
             {% for message in messages %}
-                <td>{{ message }}
+                <td>&nbsp{{ message }}
             {% endfor %}
         {% endif %}
         <body>
