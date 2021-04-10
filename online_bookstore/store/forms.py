@@ -4,6 +4,7 @@ from django.contrib.auth.forms import UserCreationForm
 from .models import User1, PaymentCard
 from .fields import CreditCardField
 
+
 class UserRegisterForm(UserCreationForm):
     email = forms.EmailField(required=True)
     first_name = forms.CharField(required=True)
@@ -12,6 +13,15 @@ class UserRegisterForm(UserCreationForm):
     class Meta:
         model = User
         fields = ('first_name', 'last_name', 'username', 'email', 'password1', 'password2')
+
+    def clean_email(self):
+        email = self.cleaned_data.get('email')
+        if (email == ""):
+            raise forms.ValidationError('This field cannot be left blank')
+        for instance in User.objects.all():
+            if instance.email == email:
+                raise forms.ValidationError(email + ' is already registered')
+        return(email)
 
     def save(self, commit=True):
         user = super().save(commit=False)
@@ -27,10 +37,11 @@ class UserRegisterForm(UserCreationForm):
 
 class User1RegisterForm(forms.ModelForm):
     phone = forms.IntegerField()
+    receive_promotions = forms.CheckboxInput()
 
     class Meta:
         model = User1
-        fields = ('phone',)
+        fields = ('phone', 'receive_promotions')
 
 class UpdateUserInfoForm(forms.ModelForm):
     first_name = forms.CharField()
@@ -44,10 +55,11 @@ class UpdateUserInfoForm(forms.ModelForm):
 
 class UpdateUser1InfoForm(forms.ModelForm):
     phone = forms.IntegerField()
+    receive_promotions = forms.CheckboxInput()
 
     class Meta:
         model = User1
-        fields = ('phone',)
+        fields = ('phone', 'receive_promotions')
 
 class NewPasswordForm(UserCreationForm):
     class Meta:

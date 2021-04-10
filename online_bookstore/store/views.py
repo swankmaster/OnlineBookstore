@@ -5,6 +5,7 @@ from django.contrib import messages
 from .forms import UserRegisterForm, User1RegisterForm, UpdateUserInfoForm, UpdateUser1InfoForm, NewPasswordForm, CreditCardForm
 from .models import Book, PaymentCard
 from django.contrib.auth.models import User
+from online_bookstore.settings import EMAIL_HOST_USER
 from django.core.mail import send_mail
 
 # Create your views here.
@@ -26,11 +27,19 @@ def register(request):
             user = form.save()
             user1 = form1.save(commit=False)
             user1.user = user
-
             user1.save()
 
             username = form.cleaned_data.get('username')
+            email = form.cleaned_data.get('email')
+
             messages.success(request, f'Account created for {username}!')
+
+            subject = 'New User Created!'
+            message = 'Congratulations ' + username + '! You have created a new account.'
+
+            print('recipient: ' + email + '\nHOST_USER: ' + EMAIL_HOST_USER)
+            send_mail(subject, message, EMAIL_HOST_USER, [email], fail_silently= False)
+
             return redirect('home')
     else:
         form = UserRegisterForm()
