@@ -2,18 +2,18 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib import messages
-from .forms import UserRegisterForm, User1RegisterForm, UpdateUserInfoForm, UpdateUser1InfoForm, NewPasswordForm, CreditCardForm
-from .models import Book, PaymentCard
+from .forms import UserRegisterForm, User1RegisterForm, UpdateUserInfoForm, UpdateUser1InfoForm, NewPasswordForm, CreditCardForm, NewPromoForm
+from .models import Book, PaymentCard, Promotion
 from django.contrib.auth.models import User
 from online_bookstore.settings import EMAIL_HOST_USER
 from django.core.mail import send_mail
+import datetime
 
 # Create your views here.
 def home(request):
     context = {
         'books': Book.objects.all().exclude(quantity='0'),
         'coming_soon': Book.objects.all().filter(quantity='0')
-
     }
 
     return render(request, 'store/home.html', context)
@@ -160,3 +160,27 @@ def password_reset(request):
         'p_form': p_form,
     }
     return render(request, 'store/password_reset.html', context)
+
+def manage_promos(request):
+    if request.method == 'POST':
+        p_form = NewPromoForm(request.POST)
+        if p_form.is_valid():
+            p_form.save()
+
+            messages.success(request, f'New Promo Created.')
+
+            return redirect('home')
+    else:
+        p_form = NewPromoForm()
+
+    promos = Promotion.objects.all()
+    active_promos = []
+    for i in promos:
+        if i.end_date > datetime.date.today:
+            active_promos.append(i)
+
+    context = {
+        'p_form': p_form,
+        'promos': active_promos,
+    }
+    return render(request, 'store/manage_promos.html', context)

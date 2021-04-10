@@ -88,8 +88,8 @@ class PaymentCard(models.Model):
 
 class Promotion(models.Model):
     promo_id = models.IntegerField(primary_key=True)
-    startdate = models.DateTimeField(db_column='startDate', blank=True, null=True)  # Field name made lowercase.
-    enddate = models.DateTimeField(db_column='endDate', blank=True, null=True)  # Field name made lowercase.
+    start_date = models.DateTimeField(db_column='start_date', blank=True, null=True)  # Field name made lowercase.
+    end_date = models.DateTimeField(db_column='end_date', blank=True, null=True)  # Field name made lowercase.
     discount = models.CharField(max_length=45, blank=True, null=True)
 
     class Meta:

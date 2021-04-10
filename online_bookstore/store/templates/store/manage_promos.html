@@ -1,0 +1,34 @@
+{% extends "store/base.html" %}
+{% load static %}
+{% block content %}
+        <h1>Promotions</h1>
+    <main>
+         <div class = "column">
+            <h2>Add Promotion</h2>
+                 <form method ="POST">
+                    {% csrf_token %}
+                     <legend>Profile Info</legend>
+                        <fieldset>
+                                {{ p_form.as_p }}
+                        </fieldset>
+                    <div>
+                        <button class="btn btn-outline-info" type="submit" name="infoSubmit">Update</button>
+                    </div>
+                </form>
+        </div>
+        <table border=1 frame=void rules=rows style="width:100%:">
+         {% for promo in promos %}
+                <colgroup>
+                    <col span="1" style="width: 33%;">
+                    <col span="1" style="width: 33%;">
+                    <col span="1" style="width: 34%;">
+                </colgroup>
+                <tr>
+                    <td>{{ promo.start_date }} </td>
+                  <td> {{ promo.end_date }} </td>
+                    <td>{{ promo.discount }}% <td>
+               </tr>
+            {% endfor %}
+        </table>
+        </main>
+{% endblock content%}

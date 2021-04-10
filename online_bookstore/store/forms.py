@@ -1,7 +1,9 @@
 from django import forms
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
-from .models import User1, PaymentCard
+from django.forms import SelectDateWidget
+
+from .models import User1, PaymentCard, Promotion
 from .fields import CreditCardField
 
 
@@ -83,6 +85,33 @@ class CreditCardForm(forms.ModelForm):
     class Meta:
         model = PaymentCard
         fields = ('card_number','expiration_date','cvv', 'billing_address')
+
+
+class NewPromoForm(forms.ModelForm):
+    start_date = forms.DateField(
+        widget=SelectDateWidget(
+            empty_label=("Choose Year", "Choose Month", "Choose Day"),
+        )
+    )
+    end_date = forms.DateField(
+        widget=SelectDateWidget(
+            empty_label=("Choose Year", "Choose Month", "Choose Day"),
+        )
+    )
+    discount = forms.IntegerField()
+
+    def clean_end_date(self):
+        start_date = self.cleaned_data('start_date')
+        end_date = self.cleaned_data.get('end_date')
+        if (end_date == ""):
+            raise forms.ValidationError('This field cannot be left blank')
+        if end_date < start_date:
+                raise forms.ValidationError('End date must be after the start date.')
+        return(end_date)
+
+    class Meta:
+        model = Promotion
+        fields = ('start_date', 'end_date', 'discount')
 
     # card_number = CreditCardField(placeholder=u'0000 0000 0000 0000', min_length=12, max_length=19)
     # expiration_date = forms.DateInput(format='%m/%y')

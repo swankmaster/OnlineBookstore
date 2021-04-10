@@ -27,7 +27,7 @@
                         <li><a href = "/admin">Admin Panel</a></li>
                         <li><a href = "/admin/store/book/">Manage Books</a></li>
                         <li><a href = "/admin/auth/user/">Manage Users</a></li>
-                        <li><a href = "/admin/store/promotion/">Manage Promos</a></li>
+                        <li><a href = "{% url 'manage_promos' %}">Manage Promos</a></li>
                     {% endif %}
                 {% else %}
                     <li><a href = "{% url 'register' %}">Login/Register</a></li>
