@@ -1,72 +1,60 @@
-<!DOCTYPE HTML>
-<html lang="en">
-    <head>
-            <link rel="stylesheet" href="home.css">
-            <meta charset="utf-8">
-            <title>My Bookstore</title>
-    </head>
-        <header>
-        <nav>
-            <ul>
-                <li><a href = "homeLoggedIn.html">Home</a></li>
-                <li><a href = "home.html">Logout</a></li>
-                <li><a href = "edit_profile.html">Edit Profile</a></li>
-                <li><a href = "myCart.html">My Cart</a></li>
-				<li><a href = "orderHistory.html">Order History</a></li>
-            </ul>
-            </nav></header>
-    <body>
+{% extends "store/base.html" %}
+{% load static %}
+{% block content %}
         <h1>Edit Profile</h1>
     <main>
 
         <div class = "column">
             <h2>Change Password</h2>
-            <form>
-                    <label for="curr_pass">Current Password:</label><br>
-                    <input type="text" id="curr_pass" name="curr_pass" placeholder="Enter Current Password"><br><br>
-                    <label for="new_pass">New Password:</label><br>
-                    <input type="text" id="new_pass" name="new_pass" placeholder="Enter New Password"><br><br>
-                    <input type="submit" value="Submit">
-            </form> 
+            <form method ="POST">
+                {% csrf_token %}
+                    <legend>Profile Info</legend>
+                    <fieldset>
+                        <label for="old_password">Current Password:</label>
+                        <input type="password" id="old_password" name="old_password" id="old_password"><br><br>
+                        {{ p_form.as_p }}
+                    </fieldset>
+                    <div>
+                        <button class="btn btn-outline-info" type="submit" name="passSubmit">Update</button>
+                    </div>
+            </form>
         </div>
          <div class = "column">
             <h2>Personal Information</h2>
-                 <form>
-                    <label for="name_personal">Name</label><br>
-                    <input type="text" id="name_personal" name="name_personal" placeholder="Enter Your Name"><br><br>
-                    <label for="age">Age:</label><br>
-                    <input type="text" id="age" name="age" placeholder="What is your age?"><br><br>
-                    <input type="submit" value="Submit">
+                 <form method ="POST">
+                    {% csrf_token %}
+                     <legend>Profile Info</legend>
+                        <fieldset>
+                                {{ u_form.as_p }}
+                                <label> Email: {{ user.email }} </label>
+                                {{ u1_form.as_p }}
+                        </fieldset>
+                    <div>
+                        <button class="btn btn-outline-info" type="submit" name="infoSubmit">Update</button>
+                    </div>
                 </form>
         </div>
          <div class = "column">
             <h2>Payment Information</h2>
-             <form>
-                    <p>Select from the options below:</p>
-                    <input type="radio" id="visa" name="card">
-                    <label for = "card">VISA</label><br>
-                    <input type="radio" id="mastercard" name="card">
-                    <label for = "card">MasterCard</label><br>
-                    <input type="radio" id="amex" name="card">
-                    <label for = "card">AMEX</label><br>
-                    <input type="radio" id="paypal" name="card">
-                    <label for = "card">Paypal</label><br><br>
-                    <label for="card_num">Card Number:</label><br>
-                    <input type="text" id="card_num" name="card_num" placeholder="Enter Card Number"><br><br>
-                    <label for="exp_date">Expiration Date:</label><br>
-                    <input type="text" id="exp_date" name="exp_date" placeholder="Enter Your Exp. Date"><br><br>
-                    <label for="cvv">CVV Number:</label><br>
-                    <input type="text" id="cvv" name="cvv" placeholder="Enter Your CVV"><br><br>
-                    <input type="submit" value="Submit">
-            </form>
+                        <div class="login_row">
+                            <form method ="POST">
+                                {% csrf_token %}
+                                    <fieldset>
+                                        {{ pay_form.as_p }}
+                                    </fieldset>
+                                <div>
+                                    <button class="btn btn-outline-info" type="submit" name="paySubmit">Update</button>
+                                </div>
+                            </form>
+                        </div>
         </div>
-         <div class = "column">
-            <h2>Address Information</h2>
-            <form>
-                <label for="address_info">Address:</label><br>
-                <input size="50" type="text" id="address_info" name="address_info" placeholder="Enter Address"><br><br>
-                <input type="submit" value="Submit">
-             </form>
-        </div>
+<!--         <div class = "column">-->
+<!--            <h2>Address Information</h2>-->
+<!--            <form>-->
+<!--                <label for="address_info">Address:</label><br>-->
+<!--                <input size="50" type="text" id="address_info" name="address_info" placeholder="Enter Address"><br><br>-->
+<!--                <input type="submit" value="Submit">-->
+<!--             </form>-->
+<!--        </div>-->
         </main>
-    </body>
+{% endblock content%}

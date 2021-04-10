@@ -1,0 +1,24 @@
+{% extends "store/base.html" %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% block content %}
+        <h2>Register</h2>
+        <div class="login_row">
+                <form method ="POST">
+                    {% csrf_token %}
+                        <fieldset>
+                                {{ form.as_p }}
+                                {{ form1.as_p }}
+                            <button class="btn btn-outline-info" type="submit">Sign Up</button>
+                        </fieldset>
+                    <div>
+
+                    </div>
+                </form>
+        </div>
+        <div class="border-top pt-3">
+            <large class="text-muted">
+                &nbsp&nbsp&nbspAlready Have An Account? <a class="ml-2" href="{% url 'login' %}">Sign In</a>
+            </large>
+        </div>
+{% endblock content%}
