@@ -18,15 +18,23 @@
             <ul>
                 <li><a href = "{% url 'home' %}">Home</a></li>
                 {% if user.is_authenticated %}
-                    <li><a href = "{% url 'edit_profile' %}">Edit Profile</a></li>
-                    <li><a href = "{% url 'myCart' %}">My Cart</a></li>
-				    <li><a href = "{% url 'orderHistory' %}">Order History</a></li>
+                    {% if user.user1.user_suspend %}
+                        <li><a href = "{% url 'suspended' %}">Edit Profile</a></li>
+                        <li><a href = "{% url 'suspended' %}">My Cart</a></li>
+				        <li><a href = "{% url 'suspended' %}">Order History</a></li>
+                    {% else %}
+                        <li><a href = "{% url 'edit_profile' %}">Edit Profile</a></li>
+                        <li><a href = "{% url 'myCart' %}">My Cart</a></li>
+				        <li><a href = "{% url 'orderHistory' %}">Order History</a></li>
+                    {% endif %}
                     <li><a href = "{% url 'logout' %}">Logout</a></li>
+
                     {% if request.user.is_superuser %}
                         <li>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp</li>
                         <li><a href = "/admin">Admin Panel</a></li>
                         <li><a href = "/admin/store/book/">Manage Books</a></li>
-                        <li><a href = "/admin/auth/user/">Manage Users</a></li>
+<!--                        <li><a href = "/admin/auth/user/">Manage Users</a></li>-->
+                        <li><a href = "{% url 'manage_users' %}">Manage Users</a></li>
                         <li><a href = "{% url 'manage_promos' %}">Manage Promos</a></li>
                     {% endif %}
                 {% else %}

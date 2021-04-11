@@ -14,4 +14,6 @@ urlpatterns = [
     path('checkout/confirmation', views.checkoutConfirmation, name='checkoutConfirmation'),
     path('password_reset', views.password_reset, name='password_reset'),
     path('manage_promos', views.manage_promos, name='manage_promos'),
+    path('manage_users', views.manage_users, name='manage_users'),
+    path('suspended', views.suspended, name='suspended'),
 ]

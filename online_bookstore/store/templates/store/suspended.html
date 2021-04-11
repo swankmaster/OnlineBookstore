@@ -1,0 +1,12 @@
+{% extends "store/base.html" %}
+{% load static %}
+{% block content %}
+    <h1>Account Suspended</h1>
+    <main>
+        <div>
+            <h2>Your account has been suspended. Most account functionalities have been disabled.</h2>
+            <a href = "{% url 'home' %}">Return Home</a>
+        </div>
+    </main>
+<br>
+{% endblock content%}

@@ -135,6 +135,9 @@ def checkout(request):
 def checkoutConfirmation(request):
     return render(request, 'store/checkoutConfirmation.html')
 
+def suspended(request):
+    return render(request, 'store/suspended.html')
+
 def password_reset(request):
     if request.method == 'POST':
         p_form = NewPasswordForm(request.POST)
@@ -198,3 +201,10 @@ def manage_promos(request):
         'promos': active_promos,
     }
     return render(request, 'store/manage_promos.html', context)
+
+
+def manage_users(request):
+    context = {
+        'users' : User.objects.all()
+    }
+    return render(request, 'store/manage_users.html', context)

@@ -1,0 +1,58 @@
+{% extends "store/base.html" %}
+{% load static %}
+{% block content %}
+    <h1><u>Users</u></h1>
+    <main></main>
+        <div>
+            <table border=1 frame=void rules=rows style="width:100%:">
+                <colgroup>
+                        <col span="1" style="width: 10%;">
+                        <col span="1" style="width: 10%;">
+                        <col span="1" style="width: 10%;">
+                        <col span="1" style="width: 10%;">
+                        <col span="1" style="width: 10%;">
+                        <col span="1" style="width: 10%;">
+                        <col span="1" style="width: 10%;">
+                        <col span="1" style="width: 10%;">
+                        <col span="1" style="width: 10%;">
+                 </colgroup>
+                <tr>
+                    <td><u>Email</td>
+                    <td><u>Username</td>
+                    <td><u>First Name</td>
+                    <td><u>Last Name</td>
+                    <td><u>Phone #</td>
+                    <td><u>Promotions</td>
+                    <td><u>Admin</td>
+                    <td><u>Suspended</td>
+                    <td></td>
+               </tr>
+            {% for user in users %}
+                <tr>
+                    <td>{{ user.email }}</td>
+                    <td>{{ user.username }}</td>
+                    <td>{{ user.first_name }}</td>
+                    <td>{{ user.last_name }}</td>
+                    <td>{{ user.user1.phone }}</td>
+                    {% if user.user1.receive_promotions %}
+                    <td><input type="checkbox" onclick="return false;" checked/></td>
+                    {% else %}
+                    <td><input type="checkbox" onclick="return false;"/></td>
+                    {% endif %}
+                    {% if user.is_staff %}
+                    <td><input type="checkbox" onclick="return false;" checked/></td>
+                    {% else %}
+                    <td><input type="checkbox" onclick="return false;"/></td>
+                    {% endif %}
+                    {% if user.user1.user_suspend %}
+                    <td><input type="checkbox" onclick="return false;" checked/></td>
+                    {% else %}
+                    <td><input type="checkbox" onclick="return false;"/></td>
+                    {% endif %}
+                    <td></td>
+               </tr>
+            {% endfor %}
+        </table>
+        </div>
+    </main>
+{% endblock content%}
