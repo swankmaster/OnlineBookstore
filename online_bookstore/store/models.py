@@ -120,7 +120,7 @@ class User1(models.Model):
     phone = models.CharField(max_length=45, blank=True, null=True)
     receive_promotions = models.BooleanField(default=False)
     status = models.CharField(max_length=45, blank=True, null=True)
-    usertype = models.CharField(db_column='userType', max_length=45, blank=True, null=True)  # Field name made lowercase.
+    user_suspend = models.BooleanField(db_column='user_suspend', default=False)  # Field name made lowercase.
     usercol = models.CharField(db_column='Usercol', max_length=45, blank=True, null=True)  # Field name made lowercase.
 
     # def __str__(self):

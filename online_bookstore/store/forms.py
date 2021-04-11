@@ -101,7 +101,7 @@ class NewPromoForm(forms.ModelForm):
     discount = forms.IntegerField()
 
     def clean_end_date(self):
-        start_date = self.cleaned_data('start_date')
+        start_date = self.cleaned_data.get('start_date')
         end_date = self.cleaned_data.get('end_date')
         if (end_date == ""):
             raise forms.ValidationError('This field cannot be left blank')

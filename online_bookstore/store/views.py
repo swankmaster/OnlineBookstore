@@ -3,11 +3,12 @@ from django.http import HttpResponse
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib import messages
 from .forms import UserRegisterForm, User1RegisterForm, UpdateUserInfoForm, UpdateUser1InfoForm, NewPasswordForm, CreditCardForm, NewPromoForm
-from .models import Book, PaymentCard, Promotion
+from .models import Book, PaymentCard, Promotion, User1
 from django.contrib.auth.models import User
 from online_bookstore.settings import EMAIL_HOST_USER
 from django.core.mail import send_mail
 import datetime
+from django.utils import timezone
 
 # Create your views here.
 def home(request):
@@ -169,15 +170,28 @@ def manage_promos(request):
 
             messages.success(request, f'New Promo Created.')
 
-            return redirect('home')
+            recipient_list = User1.objects.all().filter(receive_promotions = True)
+            email_list = [User.objects.all().filter(username = i.user).first().email for i in recipient_list]
+
+            subject = 'New Promo!'
+            message = 'You have received a new promo for ' + request.POST['discount'] + '% off'
+
+            # print('recipient: ' + email_list + '\nHOST_USER: ' + EMAIL_HOST_USER)
+            print(email_list)
+            send_mail(subject, message, EMAIL_HOST_USER, email_list, fail_silently=False)
+
+            return redirect('manage_promos')
     else:
         p_form = NewPromoForm()
 
     promos = Promotion.objects.all()
     active_promos = []
+
     for i in promos:
-        if i.end_date > datetime.date.today:
+        now = timezone.now()
+        if i.end_date > now:
             active_promos.append(i)
+
 
     context = {
         'p_form': p_form,
