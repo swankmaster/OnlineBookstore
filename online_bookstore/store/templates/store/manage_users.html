@@ -1,6 +1,15 @@
 {% extends "store/base.html" %}
 {% load static %}
 {% block content %}
+    <form method ="POST">
+                {% csrf_token %}
+                    <legend>Suspend User</legend>
+                    <fieldset>
+                        {{ form.as_p }}
+                        <button class="btn btn-outline-info" type="submit" name="suspend">Suspend</button>
+                    </fieldset>
+            </form>
+
     <h1><u>Users</u></h1>
     <main></main>
         <div>
@@ -14,7 +23,7 @@
                         <col span="1" style="width: 10%;">
                         <col span="1" style="width: 10%;">
                         <col span="1" style="width: 10%;">
-                        <col span="1" style="width: 10%;">
+                        <col span="1" style="width: 11%;">
                  </colgroup>
                 <tr>
                     <td><u>Email</td>
@@ -49,7 +58,7 @@
                     {% else %}
                     <td><input type="checkbox" onclick="return false;"/></td>
                     {% endif %}
-                    <td></td>
+                    <td><button class="btn btn-outline-info" type="submit" name="{{ user.username }}">Update</button></td>
                </tr>
             {% endfor %}
         </table>

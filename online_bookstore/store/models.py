@@ -9,6 +9,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from django_cryptography.fields import encrypt
 
 class Book(models.Model):
     bookid = models.IntegerField(db_column='bookID', primary_key=True)  # Field name made lowercase.
@@ -63,9 +64,9 @@ class InventoryBook(models.Model):
 class Order(models.Model):
     order_id = models.IntegerField(primary_key=True)
     user1_user_id = models.ForeignKey('User1', models.DO_NOTHING,  default="", db_column='User1_user_id')  # Field name made lowercase.
-    paymentCard_card_number = models.ForeignKey('Paymentcard', models.DO_NOTHING, db_column='PaymentCard_card_number')  # Field name made lowercase.
+    paymentCard_card_id = models.ForeignKey('PaymentCard', models.DO_NOTHING, db_column='PaymentCard_card_id')  # Field name made lowercase.
     total = models.CharField(max_length=45, blank=True, null=True)
-    promotion_promo = models.ForeignKey('Promotion', models.DO_NOTHING, db_column='Promotion_promo_id')  # Field name made lowercase.
+    promotion_promo = models.ForeignKey('Promotion', models.DO_NOTHING, db_column='Promotion_promo_id', null=True)  # Field name made lowercase.
     order_datetime = models.DateTimeField(blank=True, null=True)
 
     class Meta:
@@ -74,9 +75,11 @@ class Order(models.Model):
 
 
 class PaymentCard(models.Model):
-    card_number = models.CharField(max_length=16, primary_key=True)
+
+    card_id = models.IntegerField(primary_key=True, db_column='PaymentCard_card_id')
+    card_number = encrypt(models.CharField(max_length=16))
     type = models.CharField(max_length=45, blank=True, null=True)
-    cvv = models.IntegerField(blank=True, null=True)
+    cvv = encrypt(models.IntegerField(blank=True, null=True))
     expiration_date = models.CharField(max_length=45, blank=True, null=True)
     billing_address = models.CharField(max_length=45, blank=True, null=True)
     user1_user_id = models.ForeignKey('User1', models.DO_NOTHING,  default="", db_column='User1_user_id')  # Field name made lowercase.

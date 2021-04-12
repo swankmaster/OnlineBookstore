@@ -113,6 +113,14 @@ class NewPromoForm(forms.ModelForm):
         model = Promotion
         fields = ('start_date', 'end_date', 'discount')
 
+class SuspendUserForm(forms.Form):
+    username = forms.CharField()
+
+    class Meta:
+        fields = ('username',)
+
+
+
     # card_number = CreditCardField(placeholder=u'0000 0000 0000 0000', min_length=12, max_length=19)
     # expiration_date = forms.DateInput(format='%m/%y')
     # cvv = forms.IntegerField(label = 'CVV')
