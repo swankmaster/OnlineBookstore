@@ -8,13 +8,22 @@ from .fields import CreditCardField
 
 
 class UserRegisterForm(UserCreationForm):
-    email = forms.EmailField(required=True)
-    first_name = forms.CharField(required=True)
-    last_name = forms.CharField(required=True)
+    # email = forms.EmailField(required=True)
+    # first_name = forms.CharField(required=True)
+    # last_name = forms.CharField(required=True)
 
     class Meta:
         model = User
         fields = ('first_name', 'last_name', 'username', 'email', 'password1', 'password2')
+
+        widgets = {
+            'first_name': forms.TextInput(attrs={'class': 'form-control'}),
+            'last_name': forms.TextInput(attrs={'class': 'form-control'}),
+            'username': forms.TextInput(attrs={'class': 'form-control'}),
+            'email': forms.TextInput(attrs={'class': 'form-control'}),
+            # 'password1': forms.PasswordInput(attrs={'class': 'form-control'}),
+            # 'password2': forms.PasswordInput(attrs={'class': 'form-control'}),
+        }
 
     def clean_email(self):
         email = self.cleaned_data.get('email')
@@ -37,13 +46,25 @@ class UserRegisterForm(UserCreationForm):
             user.save()
         return user
 
+def __init__(self, *args, **kwargs):
+    super(UserRegisterForm, self).__init__(*args, **kwargs)
+    self.fields['password1'].widget = forms.PasswordInput(attrs={'class': 'form-control'})
+    self.fields['password2'].widget = forms.PasswordInput(attrs={'class': 'form-control'})
+
+
 class User1RegisterForm(forms.ModelForm):
-    phone = forms.IntegerField()
-    receive_promotions = forms.CheckboxInput()
+    # phone = forms.IntegerField()
+    # receive_promotions = forms.CheckboxInput()
 
     class Meta:
         model = User1
         fields = ('phone', 'receive_promotions')
+
+        widgets = {
+            'phone': forms.TextInput(attrs={'class': 'form-control'}),
+            'receive_promotions': forms.CheckboxInput(attrs={'class': 'form-control'}),
+        }
+
 
 class UpdateUserInfoForm(forms.ModelForm):
     first_name = forms.CharField()
