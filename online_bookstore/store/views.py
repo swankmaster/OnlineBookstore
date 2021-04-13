@@ -197,38 +197,49 @@ def password_reset(request):
 
 def manage_promos(request):
     if request.method == 'POST':
-        p_form = NewPromoForm(request.POST)
-        if p_form.is_valid():
-            p_form.save()
+        if 'delete' in request.POST:
+            p_form = NewPromoForm()
+            id = request.POST['delete']
+            if Promotion.objects.all().filter(promo_id = id):
+                promo = Promotion.objects.all().filter(promo_id = id).first().delete()
+        else:
+            p_form = NewPromoForm(request.POST)
+            if p_form.is_valid():
+                p_form.save()
 
-            messages.success(request, f'New Promo Created.')
+                messages.success(request, f'New Promo Created.')
 
-            recipient_list = User1.objects.all().filter(receive_promotions = True)
-            email_list = [User.objects.all().filter(username = i.user).first().email for i in recipient_list]
+                recipient_list = User1.objects.all().filter(receive_promotions = True)
+                email_list = [User.objects.all().filter(username = i.user).first().email for i in recipient_list]
 
-            subject = 'New Promo!'
-            message = 'You have received a new promo for ' + request.POST['discount'] + '% off'
+                subject = 'New Promo!'
+                message = 'You have received a new promo for ' + request.POST['discount'] + '% off'
 
-            # print('recipient: ' + email_list + '\nHOST_USER: ' + EMAIL_HOST_USER)
+                # print('recipient: ' + email_list + '\nHOST_USER: ' + EMAIL_HOST_USER)
 
-            send_mail(subject, message, EMAIL_HOST_USER, email_list, fail_silently=False)
+                send_mail(subject, message, EMAIL_HOST_USER, email_list, fail_silently=False)
 
-            return redirect('manage_promos')
+                return redirect('manage_promos')
     else:
         p_form = NewPromoForm()
 
     promos = Promotion.objects.all()
     active_promos = []
+    inactive_promos = []
+    now = timezone.now()
 
     for i in promos:
-        now = timezone.now()
         if i.end_date > now:
             active_promos.append(i)
+        else:
+            inactive_promos.append(i)
 
 
     context = {
         'p_form': p_form,
-        'promos': active_promos,
+        'active_promos': active_promos,
+        'inactive_promos': inactive_promos,
+        'now': now,
     }
     return render(request, 'store/manage_promos.html', context)
 
@@ -283,7 +294,7 @@ def manage_users(request):
                     if (user.is_staff):
                         messages.success(request, f'Employee permissions given to: {user.username}')
                     else:
-                        messages.success(request, f'Employ permissions removed from: {user.username}')
+                        messages.success(request, f'Employee permissions removed from: {user.username}')
                 elif 'admin' in request.POST:
                     user.is_superuser = not user.is_superuser
                     user.save()

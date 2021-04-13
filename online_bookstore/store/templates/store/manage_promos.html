@@ -1,6 +1,7 @@
 {% extends "store/base.html" %}
 {% load static %}
 {% load crispy_forms_tags %}
+{% load extras %}
 {% block content %}
     <h1 class="page-title">Promotions</h1>
     <main>
@@ -20,30 +21,72 @@
             <h2>Active Promotions</h2>
             <table border=1 frame=void rules=rows style="width:100%:">
                 <colgroup>
-                        <col span="1" style="width: 25%;">
-                        <col span="1" style="width: 25%;">
-                        <col span="1" style="width: 25%;">
-                        <col span="1" style="width: 25%;">
+                        <col span="1" style="width: 2%;">
+                        <col span="1" style="width: 18%;">
+                        <col span="1" style="width: 18%;">
+                        <col span="1" style="width: 18%;">
+                        <col span="1" style="width: 18%;">
+                        <col span="1" style="width: 18%;">
+                        <col span="1" style="width: 18%;">
+                        <col span="1" style="width: 19%;">
                  </colgroup>
                 <tr>
-                    <td><u>Promo ID</td>
+                    <td><u>ID</td>
+                    <td><u>Email Status</td>
                     <td><u>Start Date</td>
                     <td><u>End Date</td>
+                    <td><u>Time left</td>
                     <td><u>Discount<td>
+                    <td> </td>
                </tr>
                 <td></td>
-            {% for promo in promos %}
-                 <colgroup>
-                        <col span="1" style="width: 25%;">
-                        <col span="1" style="width: 25%;">
-                        <col span="1" style="width: 25%;">
-                        <col span="1" style="width: 25%;">
+            {% for active_promo in active_promos %}
+                <tr>
+                    <td>{{ active_promo.promo_id }}</td>
+                    <td>Sent</td>
+                    <td>{{ active_promo.start_date|date:"M d Y, H:i" }}</td>
+                    <td>{{ active_promo.end_date|date:"M d Y, H:i" }}</td>
+                    <td>{{ active_promo.end_date|subtract:now|days }}:{{ active_promo.end_date|subtract:now|seconds|hours }}:{{ active_promo.end_date|subtract:now|seconds|minutes }}:{{ active_promo.end_date|subtract:now|seconds|seconds_simple }}</td>
+                    <td>{{ active_promo.discount }}%<td>
+               </tr>
+            {% endfor %}
+        </table>
+        </div>
+        <div><label></label></div>
+        <div>
+            <h2>Inactive Promotions</h2>
+            <table border=1 frame=void rules=rows style="width:100%:">
+                <colgroup>
+                        <col span="1" style="width: 2%;">
+                        <col span="1" style="width: 18%;">
+                        <col span="1" style="width: 18%;">
+                        <col span="1" style="width: 18%;">
+                        <col span="1" style="width: 18%;">
+                        <col span="1" style="width: 18%;">
+                        <col span="1" style="width: 18%;">
+                        <col span="1" style="width: 19%;">
                  </colgroup>
                 <tr>
-                    <td>{{ promo.promo_id }}</td>
-                    <td>{{ promo.start_date }}</td>
-                    <td>{{ promo.end_date }}</td>
-                    <td>{{ promo.discount }}%<td>
+                    <td><u>ID</td>
+                    <td><u>Email Status</td>
+                    <td><u>Start Date</td>
+                    <td><u>End Date</td>
+                    <td><u>Time left</td>
+                    <td><u>Discount<td>
+                    <td> </td>
+               </tr>
+                <td></td>
+            {% for inactive_promo in inactive_promos %}
+                <tr>
+                    <td>{{ inactive_promo.promo_id }}</td>
+                    <td>Sent</td>
+                    <td>{{ inactive_promo.start_date|date:"M d Y, H:i" }}</td>
+                    <td>{{ inactive_promo.end_date|date:"M d Y, H:i" }}</td>
+                    <td>0</td>
+                    <td>{{ inactive_promo.discount }}%<td>
+                    <form method ="POST">
+                        {% csrf_token %}
+                        <button class="btn btn-dark" type="delete" value="{{ inactive_promo.promo_id }}" name="delete">Delete</button>
                </tr>
             {% endfor %}
         </table>

@@ -34,6 +34,7 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = [
     'store.apps.StoreConfig',
     'crispy_forms',
+    'online_bookstore.templatetags.extras',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -66,6 +67,9 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
             ],
+            'libraries':{
+                'extras': 'online_bookstore.templatetags.extras',
+                }
         },
     },
 ]
