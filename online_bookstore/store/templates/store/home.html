@@ -23,7 +23,7 @@
                   <td><img src = "{% static 'store/images/' %}{{ book.cover_picture }}"  atl = {{ book.title }} width = "150"></td></td>
                   <td><h3>{{ book.title }} </h3></td>
                   <td> {{ book.description }} </td>
-                <td>${{ book.sell_price }} <td>
+                <td>${{book.sell_price|floatformat:2}} <td>
                     {% if user.is_authenticated %}
                         {% if user.user1.user_suspend %}
                             <button class="btn btn-outline-info" name="addToCart" onclick = "location.href={% url 'suspended' %};"><img src = "{% static 'store/images/cart.png' %}" width = "25" height = "25"></button>
