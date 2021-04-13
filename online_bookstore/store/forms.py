@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 from django.forms import SelectDateWidget
 
-from .models import User1, PaymentCard, Promotion, Book
+from .models import User1, PaymentCard, Promotion, Book,Cart
 from .fields import CreditCardField
 
 
@@ -170,6 +170,11 @@ class CreateBookForm(forms.ModelForm):
     # class Meta:
     #     model = PaymentCard
     #     fields = ('card_number','expiration_date','cvv')
+
+class AddToCartForm(forms.ModelForm):
+
+    class Meta:
+        model = Cart
 
 
 # class UpdatePaymentInfoForm(forms.ModelForm):

@@ -32,10 +32,31 @@ class Book(models.Model):
         managed = True
         db_table = 'Book'
 
+class User1(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+
+    # userID = models.IntegerField(db_column='userID', primary_key=True)  # Field name made lowercase.
+    # username = models.CharField(max_length=45,blank=True,null= True)
+    # first_name = models.CharField(max_length=45, blank=True, null=True)
+    # last_name = models.CharField(max_length=45, blank=True, null=True)
+    # email = models.CharField(max_length=45, blank=True, null=True)
+    # password = models.CharField(max_length=45, blank=True, null=True)
+    phone = models.CharField(max_length=45, blank=True, null=True)
+    receive_promotions = models.BooleanField(default=False)
+    status = models.CharField(max_length=45, blank=True, null=True)
+    user_suspend = models.BooleanField(db_column='user_suspend', default=False)  # Field name made lowercase.
+    usercol = models.CharField(db_column='Usercol', max_length=45, blank=True, null=True)  # Field name made lowercase.
+
+    # def __str__(self):
+    #     return self.user.username
+
+    class Meta:
+        managed = True
+        db_table = 'User1'
 
 class Cart(models.Model):
     cart_id = models.IntegerField(primary_key=True)
-    user1_user_id = models.ForeignKey('User1', models.DO_NOTHING, default="", db_column='User1_user_id')  # Field name made lowercase.
+    user1_user_id = models.OneToOneField(User1, models.DO_NOTHING, db_column='User1_user_id')  # Field name made lowercase.
 
     class Meta:
         managed = True
@@ -44,6 +65,7 @@ class Cart(models.Model):
 
 class CartHasInventoryBook(models.Model):
     cart_cart = models.OneToOneField(Cart, models.DO_NOTHING, db_column='Cart_cart_id', primary_key=True)  # Field name made lowercase.
+    cart_user1_user_id = models.OneToOneField(User1, models.DO_NOTHING, db_column='Cart_user1_user_id')
     inventory_book_inventory = models.ForeignKey('InventoryBook', models.DO_NOTHING, db_column='Inventory_Book_inventory_id')  # Field name made lowercase.
 
     class Meta:
@@ -111,27 +133,7 @@ class Transaction(models.Model):
         db_table = 'Transaction'
 
 
-class User1(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
 
-    # userID = models.IntegerField(db_column='userID', primary_key=True)  # Field name made lowercase.
-    # username = models.CharField(max_length=45,blank=True,null= True)
-    # first_name = models.CharField(max_length=45, blank=True, null=True)
-    # last_name = models.CharField(max_length=45, blank=True, null=True)
-    # email = models.CharField(max_length=45, blank=True, null=True)
-    # password = models.CharField(max_length=45, blank=True, null=True)
-    phone = models.CharField(max_length=45, blank=True, null=True)
-    receive_promotions = models.BooleanField(default=False)
-    status = models.CharField(max_length=45, blank=True, null=True)
-    user_suspend = models.BooleanField(db_column='user_suspend', default=False)  # Field name made lowercase.
-    usercol = models.CharField(db_column='Usercol', max_length=45, blank=True, null=True)  # Field name made lowercase.
-
-    # def __str__(self):
-    #     return self.user.username
-
-    class Meta:
-        managed = True
-        db_table = 'User1'
 
 # @receiver(post_save, sender=User)
 # def create_user_profile(sender, instance, created, **kwargs):

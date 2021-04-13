@@ -2,8 +2,9 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib import messages
-from .forms import UserRegisterForm, User1RegisterForm, UpdateUserInfoForm, UpdateUser1InfoForm, NewPasswordForm, CreditCardForm, NewPromoForm, SuspendUserForm, CreateBookForm
-from .models import Book, PaymentCard, Promotion, User1
+from .forms import UserRegisterForm, User1RegisterForm, UpdateUserInfoForm, UpdateUser1InfoForm, NewPasswordForm, \
+    CreditCardForm, NewPromoForm, SuspendUserForm, CreateBookForm, AddToCartForm
+from .models import Book, PaymentCard, Promotion, User1,InventoryBook
 from django.contrib.auth.models import User
 from online_bookstore.settings import EMAIL_HOST_USER
 from django.core.mail import send_mail
@@ -12,6 +13,7 @@ from django.utils import timezone
 
 # Create your views here.
 def home(request):
+
     books = [
         [1, 'Percy Jackson: The Lightning Thief', '', 'Rick Riordan', 'Fiction',
         "Twelve-year-old Percy Jackson is on the most dangerous quest of his life. With the help of a satyr and a daughter of Athena, Percy must journey across the United States to catch a thief who has stolen the original weapon of mass destruction — Zeus’ master bolt. Along the way, he must face a host of mythological enemies determined to stop him. Most of all, he must come to terms with a father he has never known, and an Oracle that has warned him of betrayal by a friend.",
@@ -38,10 +40,19 @@ def home(request):
         "The Tri-Wizard Tournament is open. Four champions are selected to compete in three terrifying tasks in order to win the Tri-Wizard Cup. Meanwhile, Harry Potter is selected by the Goblet of Fire to compete while struggling to keep up the pace with classes and friends. He must confront fierce dragons, aggressive mermaids, and a dark wizard that hasn't been able to make his move for thirteen years.",
         'HPGOF.jpg', '2004', '8', '15', '2', '0', '4.9', 'Puffin', '20'],
     ]
+    # in the event we have to refactor the db, this will create the inital book objects
     if not Book.objects.all():
+        inventory_id = 1
         for book in books:
             b = Book(book[0], book[1], book[2], book[3], book[4], book[5], book[6], book[7], book[8], book[9], book[10], book[11], book[12], book[13], book[14])
             b.save()
+            for i in range(b.quantity):
+                inv = InventoryBook(i,b.bookid)
+                inv.save()
+                inventory_id = inventory_id + 1
+
+
+    # context sends information that the webpage needs to display from the db
     context = {
         'books': Book.objects.all().exclude(quantity='0'),
         'coming_soon': Book.objects.all().filter(quantity='0')
@@ -49,7 +60,7 @@ def home(request):
 
     return render(request, 'store/home.html', context)
 
-
+# register opens the Registration page
 def register(request):
     if request.method == 'POST':
         form = UserRegisterForm(request.POST)
@@ -77,7 +88,7 @@ def register(request):
         form1 = User1RegisterForm()
     return render(request, 'store/register.html', {'form': form, 'form1': form1})
 
-
+# sends to the edit profile page
 def edit_profile(request):
     if request.method == 'POST':
         if 'infoSubmit' in request.POST:
@@ -232,6 +243,21 @@ def manage_promos(request):
     }
     return render(request, 'store/manage_promos.html', context)
 
+
+def book_cart(request):
+    if request.method == 'POST':
+        form = AddToCartForm(request.POST)
+        if form.is_valid():
+            book = request.POST['bookid']
+            if Book.objects.all().filter(bookid=book):
+                cart = InventoryBook(request.user.user1,book)
+                cart.save()
+
+    context = {
+
+    }
+
+    return render(request, 'store/home.html', context)
 
 def manage_books(request):
     if request.method == 'POST':
