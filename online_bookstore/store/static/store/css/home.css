@@ -123,6 +123,12 @@ html, body {
   border-radius:0px;
 }
 
+.page-title {
+  background-color:#1D2951;
+  color:gainsboro;
+  padding: 5px
+}
+
 .behind{
   background-color:#f2f2f2;
   text-align:center;

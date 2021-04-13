@@ -2,12 +2,12 @@
 {% load static %}
 {% load crispy_forms_tags %}
 {% block content %}
-        <h1 class="coming">Edit Profile</h1>
+        <h1 class="page-title">Edit Profile</h1>
         <div class = "content-section">
             <form method ="POST">
                 {% csrf_token %}
                     <fieldset>
-                        <legend class="border-bottom mb-4">Change Password</legend>
+
 
                         <div class="form-group">
                         <label for="old_password" class=" requiredField">
@@ -22,34 +22,36 @@
                         {{ p_form | crispy }}
                     </fieldset>
                     <div>
-                        <button class="btn btn-outline-info" type="submit" name="passSubmit">Update</button>
+                        <button class="btn btn-dark" type="submit" name="passSubmit">Update</button>
                     </div>
             </form>
         </div>
-         <div class = "cotnent-section">
+         <div class = "content-section">
                  <form method ="POST">
                     {% csrf_token %}
                         <fieldset class="form-group">
                             <legend class="border-bottom mb-4">Update Profile Info</legend>
                                 {{ u_form | crispy }}
+                            <div><label></label></div>
                                 <label> Email: {{ user.email }} </label>
+                            <div><label></label></div>
                                 {{ u1_form | crispy }}
                         </fieldset>
                     <div>
-                        <button class="btn btn-outline-info" type="submit" name="infoSubmit">Update</button>
+                        <button class="btn btn-dark" type="submit" name="infoSubmit">Update</button>
                     </div>
                 </form>
         </div>
-         <div class = "column">
-            <h2>Payment Information</h2>
+         <div class = "content-section">
                         <div class="login_row">
                             <form method ="POST">
                                 {% csrf_token %}
                                     <fieldset>
+                                        <legend class="border-bottom mb-4">Payment Information</legend>
                                         {{ pay_form | crispy }}
                                     </fieldset>
                                 <div>
-                                    <button class="btn btn-outline-info" type="submit" name="paySubmit">Update</button>
+                                    <button class="btn btn-dark" type="submit" name="paySubmit">Update</button>
                                 </div>
                             </form>
                         </div>

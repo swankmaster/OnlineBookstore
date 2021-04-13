@@ -2,6 +2,7 @@
 {% load static %}
 {% load crispy_forms_tags %}
 {% block content %}
+    <h1 class="page-title">Books</h1>
     <div class="content-section">
         <form method ="POST">
                 {% csrf_token %}
@@ -10,14 +11,13 @@
                         {{ form | crispy }}
                     </fieldset>
                     <div class="form-group">
-                        <button class="btn btn-outline-info" type="submit">Create</button>
+                        <button class="btn btn-dark" type="submit">Create</button>
                     </div>
             </form>
     </div>
 
-    <h1><u>Books</u></h1>
-        <div class="content-section">
             <table border=1 frame=void rules=rows style="width:100%:">
+                <legend class="form-group">Books</legend>
                 <colgroup>
                         <col span="1" style="width: 10%;">
                         <col span="1" style="width: 10%;">
@@ -45,6 +45,5 @@
                 </tr>
             {% endfor %}
         </table>
-        </div>
     </main>
 {% endblock content%}

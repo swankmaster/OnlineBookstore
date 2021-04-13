@@ -270,10 +270,27 @@ def manage_users(request):
             username = request.POST['username']
             if User.objects.all().filter(username = username):
                 user = User.objects.all().filter(username = username).first()
-                user.user1.user_suspend = not user.user1.user_suspend
-                # print(user.user1.user_suspend)
-                user.user1.save()
-                messages.success(request, f'User edited.')
+                if 'suspend' in request.POST:
+                    user.user1.user_suspend = not user.user1.user_suspend
+                    user.user1.save()
+                    if(user.user1.user_suspend):
+                        messages.success(request, f'{user.username} has been suspended.')
+                    else:
+                        messages.success(request, f'{user.username} has been unsuspended.')
+                elif 'employee' in request.POST:
+                    user.is_staff = not user.is_staff
+                    user.save()
+                    if (user.is_staff):
+                        messages.success(request, f'Employee permissions given to: {user.username}')
+                    else:
+                        messages.success(request, f'Employ permissions removed from: {user.username}')
+                elif 'admin' in request.POST:
+                    user.is_superuser = not user.is_superuser
+                    user.save()
+                    if (user.is_superuser):
+                        messages.success(request, f'Admin permissions given to: {user.username}')
+                    else:
+                        messages.success(request, f'Admin permissions removed from: {user.username}')
             else:
                 messages.success(request, f'Invalid Username.')
 
@@ -287,4 +304,5 @@ def manage_users(request):
         'users' : User.objects.all()
     }
     return render(request, 'store/manage_users.html', context)
+
 
