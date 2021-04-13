@@ -15,5 +15,6 @@ urlpatterns = [
     path('password_reset', views.password_reset, name='password_reset'),
     path('manage_promos', views.manage_promos, name='manage_promos'),
     path('manage_users', views.manage_users, name='manage_users'),
+    path('manage_books', views.manage_books, name='manage_books'),
     path('suspended', auth_views.LogoutView.as_view(template_name='store/suspended.html'), name='suspended'),
 ]

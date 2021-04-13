@@ -3,27 +3,27 @@ from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 from django.forms import SelectDateWidget
 
-from .models import User1, PaymentCard, Promotion
+from .models import User1, PaymentCard, Promotion, Book
 from .fields import CreditCardField
 
 
 class UserRegisterForm(UserCreationForm):
-    # email = forms.EmailField(required=True)
-    # first_name = forms.CharField(required=True)
-    # last_name = forms.CharField(required=True)
+    email = forms.EmailField(required=True)
+    first_name = forms.CharField(required=True)
+    last_name = forms.CharField(required=True)
 
     class Meta:
         model = User
         fields = ('first_name', 'last_name', 'username', 'email', 'password1', 'password2')
 
-        widgets = {
-            'first_name': forms.TextInput(attrs={'class': 'form-control'}),
-            'last_name': forms.TextInput(attrs={'class': 'form-control'}),
-            'username': forms.TextInput(attrs={'class': 'form-control'}),
-            'email': forms.TextInput(attrs={'class': 'form-control'}),
-            # 'password1': forms.PasswordInput(attrs={'class': 'form-control'}),
-            # 'password2': forms.PasswordInput(attrs={'class': 'form-control'}),
-        }
+        # widgets = {
+        #     'first_name': forms.TextInput(attrs={'class': 'form-control'}),
+        #     'last_name': forms.TextInput(attrs={'class': 'form-control'}),
+        #     'username': forms.TextInput(attrs={'class': 'form-control'}),
+        #     'email': forms.TextInput(attrs={'class': 'form-control'}),
+        #     # 'password1': forms.PasswordInput(attrs={'class': 'form-control'}),
+        #     # 'password2': forms.PasswordInput(attrs={'class': 'form-control'}),
+        # }
 
     def clean_email(self):
         email = self.cleaned_data.get('email')
@@ -46,24 +46,21 @@ class UserRegisterForm(UserCreationForm):
             user.save()
         return user
 
-def __init__(self, *args, **kwargs):
-    super(UserRegisterForm, self).__init__(*args, **kwargs)
-    self.fields['password1'].widget = forms.PasswordInput(attrs={'class': 'form-control'})
-    self.fields['password2'].widget = forms.PasswordInput(attrs={'class': 'form-control'})
+
 
 
 class User1RegisterForm(forms.ModelForm):
-    # phone = forms.IntegerField()
-    # receive_promotions = forms.CheckboxInput()
+    phone = forms.IntegerField(required=True)
+    receive_promotions = forms.CheckboxInput()
 
     class Meta:
         model = User1
         fields = ('phone', 'receive_promotions')
 
-        widgets = {
-            'phone': forms.TextInput(attrs={'class': 'form-control'}),
-            'receive_promotions': forms.CheckboxInput(attrs={'class': 'form-control'}),
-        }
+        # widgets = {
+        #     'phone': forms.TextInput(attrs={'class': 'form-control'}),
+        #     'receive_promotions': forms.CheckboxInput(attrs={'class': 'form-control'}),
+        # }
 
 
 class UpdateUserInfoForm(forms.ModelForm):
@@ -126,7 +123,7 @@ class NewPromoForm(forms.ModelForm):
         end_date = self.cleaned_data.get('end_date')
         if (end_date == ""):
             raise forms.ValidationError('This field cannot be left blank')
-        if end_date < start_date:
+        if end_date <= start_date:
                 raise forms.ValidationError('End date must be after the start date.')
         return(end_date)
 
@@ -140,6 +137,30 @@ class SuspendUserForm(forms.Form):
     class Meta:
         fields = ('username',)
 
+
+class CreateBookForm(forms.ModelForm):
+    title = forms.CharField(required=True)
+    isbn = forms.CharField(required=True)
+    author = forms.CharField(required=True)
+    category = forms.CharField(required=True)
+    description = forms.CharField(required=True)
+    cover_picture = forms.ImageField()
+    year = forms.IntegerField(required=True)
+    buy_price = forms.FloatField(required=True)
+    sell_price = forms.FloatField(required=True)
+    edition = forms.CharField(required=True)
+    quantity = forms.IntegerField(required=True)
+    rating = forms.FloatField(required=True)
+    publisher = forms.CharField(required=True)
+    minimum_threshold = forms.IntegerField(required=True)
+
+    class Meta:
+        model = Book
+        fields = ("title","isbn","author","category","description","cover_picture","year","buy_price","sell_price","edition","quantity","rating","publisher","minimum_threshold")
+
+    def __init__(self, *args, **kwargs):
+        super(CreateBookForm, self).__init__(*args, **kwargs)
+        self.fields['cover_picture'].required = False
 
 
     # card_number = CreditCardField(placeholder=u'0000 0000 0000 0000', min_length=12, max_length=19)

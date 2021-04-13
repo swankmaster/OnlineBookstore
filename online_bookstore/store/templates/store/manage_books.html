@@ -1,0 +1,50 @@
+{% extends "store/base.html" %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% block content %}
+    <div class="content-section">
+        <form method ="POST">
+                {% csrf_token %}
+                    <fieldset class="form-group">
+                        <legend class="border-bottom mb-4">Create Book</legend>
+                        {{ form | crispy }}
+                    </fieldset>
+                    <div class="form-group">
+                        <button class="btn btn-outline-info" type="submit">Create</button>
+                    </div>
+            </form>
+    </div>
+
+    <h1><u>Books</u></h1>
+        <div class="content-section">
+            <table border=1 frame=void rules=rows style="width:100%:">
+                <colgroup>
+                        <col span="1" style="width: 10%;">
+                        <col span="1" style="width: 10%;">
+                        <col span="1" style="width: 10%;">
+                        <col span="1" style="width: 10%;">
+                        <col span="1" style="width: 10%;">
+                        <col span="1" style="width: 10%;">
+                 </colgroup>
+                <tr>
+                    <td><u>Title</td>
+                    <td><u>Author</td>
+                    <td><u>Quantity</td>
+                    <td><u>Minimum Threshold</td>
+                    <td><u>Buy Price</td>
+                    <td><u>Sell Price</td>
+               </tr>
+            {% for book in books %}
+                <tr>
+                    <td>{{ book.title }}</td>
+                    <td>{{ book.author }}</td>
+                    <td>{{ book.quantity }}</td>
+                    <td>{{ book.minimum_threshold }}</td>
+                    <td>{{ book.buy_price }}</td>
+                    <td>{{ book.sell_price }}</td>
+                </tr>
+            {% endfor %}
+        </table>
+        </div>
+    </main>
+{% endblock content%}

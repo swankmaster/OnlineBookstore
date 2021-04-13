@@ -1,5 +1,6 @@
 {% extends "store/base.html" %}
 {% load static %}
+{% load crispy_forms_tags %}
 {% block content %}
     <h1><u>Promotions</u></h1>
     <main>
@@ -9,7 +10,7 @@
                     {% csrf_token %}
                      <legend>New Promotion Info</legend>
                         <fieldset>
-                                {{ p_form.as_p }}
+                                {{ p_form.as_table }}
                         </fieldset>
                     <div>
                         <button class="btn btn-outline-info" type="submit" name="infoSubmit">Create</button>

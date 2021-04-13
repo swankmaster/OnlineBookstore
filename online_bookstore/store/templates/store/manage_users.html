@@ -1,11 +1,12 @@
 {% extends "store/base.html" %}
 {% load static %}
+{% load crispy_forms_tags %}
 {% block content %}
     <form method ="POST">
                 {% csrf_token %}
                     <legend>Suspend User</legend>
                     <fieldset>
-                        {{ form.as_p }}
+                        {{ form | crispy }}
                         <button class="btn btn-outline-info" type="submit" name="suspend">Suspend</button>
                     </fieldset>
             </form>

@@ -13,20 +13,20 @@ from django_cryptography.fields import encrypt
 
 class Book(models.Model):
     bookid = models.IntegerField(db_column='bookID', primary_key=True)  # Field name made lowercase.
-    title = models.CharField(max_length=45, blank=True, null=True)
-    isbn = models.CharField(db_column='ISBN', max_length=45, blank=True, null=True)  # Field name made lowercase.
+    title = models.CharField(max_length=2000, blank=True, null=True)
+    isbn = models.CharField(db_column='isbn', max_length=45, blank=True, null=True)  # Field name made lowercase.
     author = models.CharField(max_length=45, blank=True, null=True)
     category = models.CharField(max_length=45, blank=True, null=True)
-    description = models.CharField(max_length=45, blank=True, null=True)
-    cover_picture = models.CharField(max_length=45, blank=True, null=True)
-    year = models.CharField(max_length=45, blank=True, null=True)
-    buy_price = models.CharField(max_length=45, blank=True, null=True)
-    sell_price = models.CharField(max_length=45, blank=True, null=True)
+    description = models.CharField(max_length=2000, blank=True, null=True)
+    cover_picture = models.ImageField(upload_to='online_bookstore/store/static/store/images/', null=True, blank=True)
+    year = models.IntegerField(blank=True, null=True)
+    buy_price = models.FloatField(blank=True, null=True)
+    sell_price = models.FloatField(blank=True, null=True)
     edition = models.CharField(max_length=45, blank=True, null=True)
-    quantity = models.CharField(max_length=45, blank=True, null=True)
-    rating = models.CharField(max_length=45, blank=True, null=True)
+    quantity = models.IntegerField(blank=True, null=True)
+    rating = models.FloatField(blank=True, null=True)
     publisher = models.CharField(max_length=45, blank=True, null=True)
-    minimum_threshold = models.CharField(max_length=45, blank=True, null=True)
+    minimum_threshold = models.IntegerField(blank=True, null=True)
 
     class Meta:
         managed = True

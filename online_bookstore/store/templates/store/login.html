@@ -2,13 +2,12 @@
 {% load static %}
 {% load crispy_forms_tags %}
 {% block content %}
-        <h2>Login</h2>
-        <div class="login_row">
+        <div class="content-section">
                 <form method ="POST">
                     {% csrf_token %}
-                    <legend>Login Here</legend>
-                        <fieldset>
-                                {{ form.as_p }}
+                        <fieldset class="form-group">
+                                <legend class="border-bottom mb-4">Login</legend>
+                                {{ form | crispy }}
                             <button class="btn btn-outline-info" type="submit">Sign In</button>
                         </fieldset>
                     <div>

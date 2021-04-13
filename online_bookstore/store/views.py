@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib import messages
-from .forms import UserRegisterForm, User1RegisterForm, UpdateUserInfoForm, UpdateUser1InfoForm, NewPasswordForm, CreditCardForm, NewPromoForm, SuspendUserForm
+from .forms import UserRegisterForm, User1RegisterForm, UpdateUserInfoForm, UpdateUser1InfoForm, NewPasswordForm, CreditCardForm, NewPromoForm, SuspendUserForm, CreateBookForm
 from .models import Book, PaymentCard, Promotion, User1
 from django.contrib.auth.models import User
 from online_bookstore.settings import EMAIL_HOST_USER
@@ -210,7 +210,7 @@ def manage_promos(request):
             message = 'You have received a new promo for ' + request.POST['discount'] + '% off'
 
             # print('recipient: ' + email_list + '\nHOST_USER: ' + EMAIL_HOST_USER)
-            print(email_list)
+
             send_mail(subject, message, EMAIL_HOST_USER, email_list, fail_silently=False)
 
             return redirect('manage_promos')
@@ -231,6 +231,36 @@ def manage_promos(request):
         'promos': active_promos,
     }
     return render(request, 'store/manage_promos.html', context)
+
+
+def manage_books(request):
+    if request.method == 'POST':
+        form = CreateBookForm(request.POST)
+        if form.is_valid():
+
+            book = form.save(commit=False)
+            book.cover_picture = request.POST['cover_picture']
+            book.save()
+
+            messages.success(request, f'New Book Created.')
+
+            recipient_list = User1.objects.all().filter(receive_promotions = True)
+            email_list = [User.objects.all().filter(username = i.user).first().email for i in recipient_list]
+
+            subject = 'New Book Added!'
+            message = 'We have just added a new book: ' + request.POST['title']
+
+            send_mail(subject, message, EMAIL_HOST_USER, email_list, fail_silently=False)
+
+            return redirect('manage_books')
+    else:
+        form = CreateBookForm()
+
+    context = {
+        'form': form,
+        'books': Book.objects.all(),
+    }
+    return render(request, 'store/manage_books.html', context)
 
 
 def manage_users(request):
@@ -257,3 +287,4 @@ def manage_users(request):
         'users' : User.objects.all()
     }
     return render(request, 'store/manage_users.html', context)
+
