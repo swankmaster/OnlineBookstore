@@ -3,7 +3,7 @@ from django.http import HttpResponse
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib import messages
 from .forms import UserRegisterForm, User1RegisterForm, UpdateUserInfoForm, UpdateUser1InfoForm, NewPasswordForm, CreditCardForm, NewPromoForm, SuspendUserForm, CreateBookForm
-from .models import Book, PaymentCard, Promotion, User1
+from .models import Book, PaymentCard, Promotion, User1, Cart, CartHasInventoryBook
 from django.contrib.auth.models import User
 from online_bookstore.settings import EMAIL_HOST_USER
 from django.core.mail import send_mail
@@ -38,6 +38,19 @@ def home(request):
         "The Tri-Wizard Tournament is open. Four champions are selected to compete in three terrifying tasks in order to win the Tri-Wizard Cup. Meanwhile, Harry Potter is selected by the Goblet of Fire to compete while struggling to keep up the pace with classes and friends. He must confront fierce dragons, aggressive mermaids, and a dark wizard that hasn't been able to make his move for thirteen years.",
         'HPGOF.jpg', '2004', '8', '15', '2', '0', '4.9', 'Puffin', '20'],
     ]
+    if request.method == 'POST':
+        if 'add_to_cart' in request.POST:
+            book = request.POST['add_to_cart']
+            cart = Cart.objects.all().filter(user1_user_id = request.user.user1).first()
+
+            if CartHasInventoryBook.objects.all().filter(cart_cart = cart, book_bookid = book):
+                inventory = CartHasInventoryBook.objects.all().filter(book_bookid = book).first()
+                inventory.quantity = inventory.quantity + 1
+            else:
+                inventory = CartHasInventoryBook(cart_cart=cart, book_bookid=Book.objects.all().filter(bookid=book).first())
+
+            inventory.save()
+
     if not Book.objects.all():
         for book in books:
             b = Book(book[0], book[1], book[2], book[3], book[4], book[5], book[6], book[7], book[8], book[9], book[10], book[11], book[12], book[13], book[14])
@@ -70,6 +83,9 @@ def register(request):
 
             print('recipient: ' + email + '\nHOST_USER: ' + EMAIL_HOST_USER)
             send_mail(subject, message, EMAIL_HOST_USER, [email], fail_silently= False)
+
+            cart = Cart(user1.user_id, user1.user_id)
+            cart.save()
 
             return redirect('home')
     else:
@@ -181,7 +197,21 @@ def edit_profile(request):
 
 
 def myCart(request):
-    return render(request, 'store/myCart.html')
+    if request.method == 'POST':
+        print(request.POST)
+        book1 = Book.objects.all().filter(bookid = request.POST['update']).first()
+        inventory = CartHasInventoryBook.objects.all().filter(cart_cart_id = request.user.user1.user_id, book_bookid = book1).first()
+        inventory.quantity = request.POST['number']
+        inventory.save()
+
+    cart_books = CartHasInventoryBook.objects.all().filter(cart_cart_id = request.user.user1.user_id)
+    books = []
+    for i in cart_books:
+        books.append([Book.objects.all().filter(bookid = i.book_bookid.bookid).first(), i.quantity])
+    context = {
+        'books' : books,
+    }
+    return render(request, 'store/myCart.html', context)
 
 def orderHistory(request):
     return render(request, 'store/orderHistory.html')

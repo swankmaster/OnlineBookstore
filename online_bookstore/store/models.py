@@ -43,22 +43,13 @@ class Cart(models.Model):
 
 
 class CartHasInventoryBook(models.Model):
-    cart_cart = models.OneToOneField(Cart, models.DO_NOTHING, db_column='Cart_cart_id', primary_key=True)  # Field name made lowercase.
-    inventory_book_inventory = models.ForeignKey('InventoryBook', models.DO_NOTHING, db_column='Inventory_Book_inventory_id')  # Field name made lowercase.
+    cart_cart = models.ForeignKey(Cart, models.DO_NOTHING, db_column='Cart_cart_id')  # Field name made lowercase.
+    book_bookid = models.ForeignKey(Book, models.DO_NOTHING, db_column='Book_bookID')  # Field name made lowercase.
+    quantity = models.IntegerField(default=1)
 
     class Meta:
         managed = True
         db_table = 'Cart_has_Inventory_Book'
-        unique_together = (('cart_cart', 'inventory_book_inventory'),)
-
-
-class InventoryBook(models.Model):
-    inventory_id = models.IntegerField(primary_key=True)
-    book_bookid = models.ForeignKey(Book, models.DO_NOTHING, db_column='Book_bookID')  # Field name made lowercase.
-
-    class Meta:
-        managed = True
-        db_table = 'Inventory_Book'
 
 
 class Order(models.Model):

@@ -5,7 +5,6 @@ from .models import *
 admin.site.register(Book)
 admin.site.register(Cart)
 admin.site.register(CartHasInventoryBook)
-admin.site.register(InventoryBook)
 admin.site.register(Order)
 admin.site.register(PaymentCard)
 admin.site.register(Promotion)
