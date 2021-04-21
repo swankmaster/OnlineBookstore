@@ -9,17 +9,17 @@
                         <fieldset class="form-group">
 
                                 {{ form | crispy }}
-                            <button class="btn btn-outline-info" type="submit">Sign In</button>
+                            <button class="btn btn-dark" type="submit">Sign In</button>
                         </fieldset>
                     <div>
 
                     </div>
                 </form>
-        </div>
-        <div class="border-top pt-3">
-            <large class="text-muted">
-                &nbsp&nbsp&nbspNeed An Account? <a class="ml-2" href="{% url 'register' %}">Sign Up</a>
-                <br>&nbsp&nbsp&nbspReset Password. <a class="ml-2" href="{% url 'password_reset' %}">Reset Now</a>
-            </large>
+            <div class="border-top pt-3">
+                <large class="text-muted">
+                    Need An Account? <a class="ml-2" href="{% url 'register' %}">Sign Up</a>
+                    <br>Reset Password. <a class="ml-2" href="{% url 'password_reset' %}">Reset Now</a>
+                </large>
+            </div>
         </div>
 {% endblock content%}

@@ -1,6 +1,7 @@
 {% extends "store/base.html" %}
 {% load static %}
 {% load crispy_forms_tags %}
+{% load extras %}
 {% block content %}
         <h1 class="page-title">Edit Profile</h1>
         <div class = "content-section">
@@ -41,17 +42,53 @@
                 </form>
         </div>
          <div class = "content-section">
-                        <div class="login_row">
                             <form method ="POST">
                                 {% csrf_token %}
                                     <fieldset>
-                                        <legend class="border-bottom mb-4">Payment Information</legend>
+                                        <legend class="border-bottom mb-4">Add Payment Method</legend>
                                         {{ pay_form | crispy }}
                                     </fieldset>
                                 <div>
-                                    <button class="btn btn-dark" type="submit" name="paySubmit">Update</button>
+                                    <button class="btn btn-dark" type="submit" name="paySubmit">Create</button>
+                                    {% if too_many %}
+                                        <small class="asteriskField">Only 3 cards can be stored at one time.</small>
+                                    {% endif %}
                                 </div>
                             </form>
-                        </div>
+        </div>
+        <div class="content-section">
+            <table border=1 frame=void rules=rows style="width:100%:">
+                <legend class="form-group">Your Payment Methods</legend>
+                    {% if cards %}
+                        <colgroup>
+                            <col span="1" style="width: 1%;">
+                            <col span="1" style="width: 2%;">
+                            <col span="1" style="width: 2%;">
+                            <col span="1" style="width: 1%;">
+                        </colgroup>
+                        <tr>
+                            <td><u>ID</td>
+                            <td><u>Last 4 Digits</td>
+                            <td><u>Expiration</td>
+                            <td> </td>
+                        </tr>
+                        {% for card in cards %}
+                        <tr>
+                            <td>{{ card.card_id }}</td>
+                            <td>{{ card.card_number|last_4 }}</td>
+                            <td>{{ card.expiration_date }}</td>
+                            <td>
+                            <form method ="POST">
+                                {% csrf_token %}
+                                <button class="btn btn-dark" type="delete" value="{{ card.card_id }}" name="delete">Delete</button>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    {% else %}
+                        <tr>
+                            You have no cards on file.
+                        </tr>
+                    {% endif %}
+            </table>
         </div>
 {% endblock content%}

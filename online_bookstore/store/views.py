@@ -79,6 +79,7 @@ def register(request):
 
 
 def edit_profile(request):
+    too_many = False
     if request.method == 'POST':
         if 'infoSubmit' in request.POST:
             u_form = UpdateUserInfoForm(request.POST, instance=request.user)
@@ -89,6 +90,7 @@ def edit_profile(request):
             if u_form.is_valid() and u1_form.is_valid():
                 u_form.save()
                 u1_form.save()
+                return redirect('edit_profile')
                 # send_mail(
                 #     'Profile Information Changed',
                 #     'Some of your profile information has been changed',
@@ -109,23 +111,33 @@ def edit_profile(request):
                 if user.check_password(old_password):
                     p_form.save()
                     messages.success(request, f'Password updated for {user.username}!')
-                    return redirect('home')
+                    return redirect('edit_profile')
                 else:
                     messages.success(request, f'Password information is incorrect.')
             else:
                 messages.success(request, f'Password information is incorrect.')
         elif 'paySubmit' in request.POST:
-            pay_form = CreditCardForm(request.POST, instance=PaymentCard.objects.all().filter(user1_user_id = request.user.user1).last())
+            pay_form = CreditCardForm(request.POST)
             u_form = UpdateUserInfoForm(instance=request.user)
             u1_form = UpdateUser1InfoForm(instance=request.user.user1)
             p_form = NewPasswordForm()
+            cards = PaymentCard.objects.all().filter(user1_user_id=request.user.user1)
+
             if pay_form.is_valid():
-                if (PaymentCard.objects.all().filter(user1_user_id=request.user.user1)):
-                    PaymentCard.objects.all().filter(user1_user_id=request.user.user1).last().delete()
-                payment = pay_form.save(commit=False)
-                # payment.card_number = PaymentCard.objects.all().filter(user1_user_id = request.user.user1).last().card_number
-                payment.user1_user_id = request.user.user1
-                payment.save()
+                if len(PaymentCard.objects.all().filter(user1_user_id=request.user.user1)) < 3:
+                    payment = pay_form.save(commit=False)
+                    payment.user1_user_id = request.user.user1
+                    payment.save()
+                    return redirect('edit_profile')
+                else:
+                    too_many = True
+
+                # if (PaymentCard.objects.all().filter(user1_user_id=request.user.user1)):
+                #     PaymentCard.objects.all().filter(user1_user_id=request.user.user1).last().delete()
+                # payment = pay_form.save(commit=False)
+                # # payment.card_number = PaymentCard.objects.all().filter(user1_user_id = request.user.user1).last().card_number
+                # payment.user1_user_id = request.user.user1
+                # payment.save()
 
             # curr_pass = request.POST['curr_pass'].strip()
             # new_pass = request.POST['new_pass'].strip()
@@ -138,17 +150,32 @@ def edit_profile(request):
             #         tempuser.set_password(request.POST['new_pass'])
             #         tempuser.save()
 
+        elif 'delete' in request.POST:
+            pay_form = CreditCardForm()
+            u_form = UpdateUserInfoForm(instance=request.user)
+            u1_form = UpdateUser1InfoForm(instance=request.user.user1)
+            p_form = NewPasswordForm()
+
+            id = request.POST['delete']
+            if PaymentCard.objects.all().filter(card_id=id):
+                PaymentCard.objects.all().filter(card_id=id).first().delete()
+
+            cards = PaymentCard.objects.all().filter(user1_user_id=request.user.user1)
+            return redirect('edit_profile')
     else:
         u_form = UpdateUserInfoForm(instance=request.user)
         u1_form = UpdateUser1InfoForm(instance=request.user.user1)
         p_form = NewPasswordForm()
-        pay_form = CreditCardForm(instance=PaymentCard.objects.all().filter(user1_user_id = request.user.user1).last())
+        pay_form = CreditCardForm()
+        cards = PaymentCard.objects.all().filter(user1_user_id = request.user.user1)
 
     context = {
         'u_form': u_form,
         'u1_form': u1_form,
         'p_form': p_form,
         'pay_form': pay_form,
+        'cards': cards,
+        'too_many': too_many,
     }
     return render(request, 'store/edit_profile.html', context)
 

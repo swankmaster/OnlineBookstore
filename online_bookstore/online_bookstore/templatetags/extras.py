@@ -38,3 +38,13 @@ def seconds_simple(value):
     if len(seconds) < 2:
         seconds = '0' + seconds
     return(seconds)
+
+@register.filter
+def last_4(value):
+    length = len(value)
+    if length >= 4:
+        start = length-4
+        last = value[start:]
+    else:
+        last = value
+    return(last)
