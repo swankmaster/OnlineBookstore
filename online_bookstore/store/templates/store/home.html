@@ -2,12 +2,6 @@
 {% load static %}
 {% block content %}
     <h1 class="page-title">Featured Books</h1>
-    <div style ="text-align: center">
-            <input type="text" id="search" name="search" placeholder="Search Books!">
-                <button class="btn btn-dark">Search</button>
-            </input>
-            <div><label></label></div>
-    </div>
     <main>
         <table border=1 frame=void rules=rows style="width:100%:">
          {% for book in books %}
@@ -27,6 +21,8 @@
                     {% if user.is_authenticated %}
                         {% if user.user1.user_suspend %}
                             <button class="btn btn-outline-info" name="addToCart" onclick = "location.href={% url 'suspended' %};"><img src = "{% static 'store/images/cart.png' %}" width = "25" height = "25"></button>
+                        {% elif not user.user1.user_active %}
+
                         {% else %}
                             <td>
                             <form method ="POST">

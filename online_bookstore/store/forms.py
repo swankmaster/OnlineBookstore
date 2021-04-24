@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 from django.forms import SelectDateWidget
 
-from .models import User1, PaymentCard, Promotion, Book
+from .models import User1, PaymentCard, Promotion, Book, ShippingAddress
 from .fields import CreditCardField
 
 
@@ -104,8 +104,19 @@ class CreditCardForm(forms.ModelForm):
         model = PaymentCard
         fields = ('card_number','expiration_date','cvv', 'billing_address')
 
+class AddressForm(forms.ModelForm):
+    street = forms.CharField(required=False)
+    city = forms.CharField(required=False)
+    state = forms.CharField(required=False)
+    zip = forms.CharField(required=False)
+
+    class Meta:
+        model = ShippingAddress
+        fields = ('street', 'city', 'state', 'zip')
+
 
 class NewPromoForm(forms.ModelForm):
+    promo_code = forms.CharField()
     start_date = forms.DateField(
         widget=SelectDateWidget(
             empty_label=("Choose Year", "Choose Month", "Choose Day"),
@@ -129,7 +140,7 @@ class NewPromoForm(forms.ModelForm):
 
     class Meta:
         model = Promotion
-        fields = ('start_date', 'end_date', 'discount')
+        fields = ('start_date', 'end_date', 'promo_code', 'discount')
 
 class SuspendUserForm(forms.Form):
     username = forms.CharField()

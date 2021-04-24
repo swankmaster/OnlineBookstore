@@ -2,12 +2,14 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib import messages
-from .forms import UserRegisterForm, User1RegisterForm, UpdateUserInfoForm, UpdateUser1InfoForm, NewPasswordForm, CreditCardForm, NewPromoForm, SuspendUserForm, CreateBookForm
-from .models import Book, PaymentCard, Promotion, User1, Cart, CartHasInventoryBook
+from .forms import UserRegisterForm, User1RegisterForm, UpdateUserInfoForm, UpdateUser1InfoForm, NewPasswordForm, CreditCardForm, NewPromoForm, SuspendUserForm, CreateBookForm, AddressForm
+from .models import Book, PaymentCard, Promotion, User1, Cart, CartHasInventoryBook, ShippingAddress, Order, OrderedBook
 from django.contrib.auth.models import User
 from online_bookstore.settings import EMAIL_HOST_USER
 from django.core.mail import send_mail
 import datetime
+import string
+import random
 from django.utils import timezone
 
 # Create your views here.
@@ -51,6 +53,8 @@ def home(request):
 
             inventory.save()
 
+            messages.success(request, f'\"{Book.objects.all().filter(bookid = book).first().title}\" added to your Cart!')
+
     if not Book.objects.all():
         for book in books:
             b = Book(book[0], book[1], book[2], book[3], book[4], book[5], book[6], book[7], book[8], book[9], book[10], book[11], book[12], book[13], book[14])
@@ -68,9 +72,12 @@ def register(request):
         form = UserRegisterForm(request.POST)
         form1 = User1RegisterForm(request.POST)
         if form.is_valid() and form1.is_valid():
+            code = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(5))
+
             user = form.save()
             user1 = form1.save(commit=False)
             user1.user = user
+            user1.user_code = code
             user1.save()
 
             username = form.cleaned_data.get('username')
@@ -78,8 +85,8 @@ def register(request):
 
             messages.success(request, f'Account created for {username}!')
 
-            subject = 'New User Created!'
-            message = 'Congratulations ' + username + '! You have created a new account.'
+            subject = 'New User Created! Confirm Your Account Now.'
+            message = 'Congratulations ' + username + '! You have created a new account. \n\nYour confirmation code is:\n ' + code
 
             print('recipient: ' + email + '\nHOST_USER: ' + EMAIL_HOST_USER)
             send_mail(subject, message, EMAIL_HOST_USER, [email], fail_silently= False)
@@ -102,10 +109,24 @@ def edit_profile(request):
             u1_form = UpdateUser1InfoForm(request.POST, instance=request.user.user1)
             p_form = NewPasswordForm()
             pay_form = CreditCardForm(instance=PaymentCard.objects.all().filter(user1_user_id = request.user.user1).last())
+            address_form = AddressForm(instance=ShippingAddress.objects.all().filter(user1_user_id = request.user.user1).last())
+            cards = PaymentCard.objects.all().filter(user1_user_id=request.user.user1)
 
             if u_form.is_valid() and u1_form.is_valid():
                 u_form.save()
                 u1_form.save()
+
+                username = request.user.username
+                email = request.user.email
+
+                messages.success(request, f'Information Updated for {username}!')
+
+                subject = 'Account Updated.'
+                message = 'Hello ' + username + '! Your account information has been changed.'
+
+                print('recipient: ' + email + '\nHOST_USER: ' + EMAIL_HOST_USER)
+                send_mail(subject, message, EMAIL_HOST_USER, [email], fail_silently=False)
+
                 return redirect('edit_profile')
                 # send_mail(
                 #     'Profile Information Changed',
@@ -119,6 +140,8 @@ def edit_profile(request):
             u1_form = UpdateUser1InfoForm(instance=request.user.user1)
             p_form = NewPasswordForm(request.POST, instance=request.user)
             pay_form = CreditCardForm(instance=PaymentCard.objects.all().filter(user1_user_id = request.user.user1).last())
+            address_form = AddressForm(instance=ShippingAddress.objects.all().filter(user1_user_id = request.user.user1).last())
+            cards = PaymentCard.objects.all().filter(user1_user_id=request.user.user1)
 
             old_password = request.POST['old_password'].strip()
 
@@ -127,6 +150,16 @@ def edit_profile(request):
                 if user.check_password(old_password):
                     p_form.save()
                     messages.success(request, f'Password updated for {user.username}!')
+
+                    username = request.user.username
+                    email = request.user.email
+
+                    subject = 'Account Updated.'
+                    message = 'Hello ' + username + '! Your password has been changed.'
+
+                    print('recipient: ' + email + '\nHOST_USER: ' + EMAIL_HOST_USER)
+                    send_mail(subject, message, EMAIL_HOST_USER, [email], fail_silently=False)
+
                     return redirect('edit_profile')
                 else:
                     messages.success(request, f'Password information is incorrect.')
@@ -137,6 +170,7 @@ def edit_profile(request):
             u_form = UpdateUserInfoForm(instance=request.user)
             u1_form = UpdateUser1InfoForm(instance=request.user.user1)
             p_form = NewPasswordForm()
+            address_form = AddressForm(instance=ShippingAddress.objects.all().filter(user1_user_id = request.user.user1).last())
             cards = PaymentCard.objects.all().filter(user1_user_id=request.user.user1)
 
             if pay_form.is_valid():
@@ -171,6 +205,7 @@ def edit_profile(request):
             u_form = UpdateUserInfoForm(instance=request.user)
             u1_form = UpdateUser1InfoForm(instance=request.user.user1)
             p_form = NewPasswordForm()
+            address_form = AddressForm(instance=ShippingAddress.objects.all().filter(user1_user_id = request.user.user1).last())
 
             id = request.POST['delete']
             if PaymentCard.objects.all().filter(card_id=id):
@@ -178,11 +213,29 @@ def edit_profile(request):
 
             cards = PaymentCard.objects.all().filter(user1_user_id=request.user.user1)
             return redirect('edit_profile')
+
+        elif 'addSubmit' in request.POST:
+            pay_form = CreditCardForm()
+            u_form = UpdateUserInfoForm(instance=request.user)
+            u1_form = UpdateUser1InfoForm(instance=request.user.user1)
+            p_form = NewPasswordForm()
+            address_form = AddressForm(request.POST, instance=ShippingAddress.objects.all().filter(user1_user_id = request.user.user1).first())
+
+            if ShippingAddress.objects.all().filter(user1_user_id=request.user.user1):
+                ShippingAddress.objects.all().filter(user1_user_id=request.user.user1).last().delete()
+
+            address = address_form.save(commit=False)
+            address.user1_user_id = request.user.user1
+            address.save()
+
+            cards = PaymentCard.objects.all().filter(user1_user_id=request.user.user1)
+
     else:
         u_form = UpdateUserInfoForm(instance=request.user)
         u1_form = UpdateUser1InfoForm(instance=request.user.user1)
         p_form = NewPasswordForm()
         pay_form = CreditCardForm()
+        address_form = AddressForm(instance=ShippingAddress.objects.all().filter(user1_user_id = request.user.user1).last())
         cards = PaymentCard.objects.all().filter(user1_user_id = request.user.user1)
 
     context = {
@@ -190,6 +243,7 @@ def edit_profile(request):
         'u1_form': u1_form,
         'p_form': p_form,
         'pay_form': pay_form,
+        'address_form': address_form,
         'cards': cards,
         'too_many': too_many,
     }
@@ -198,32 +252,259 @@ def edit_profile(request):
 
 def myCart(request):
     if request.method == 'POST':
-        print(request.POST)
-        book1 = Book.objects.all().filter(bookid = request.POST['update']).first()
-        inventory = CartHasInventoryBook.objects.all().filter(cart_cart_id = request.user.user1.user_id, book_bookid = book1).first()
-        inventory.quantity = request.POST['number']
-        inventory.save()
+        if 'update' in request.POST:
+            print(request.POST)
+            book1 = Book.objects.all().filter(bookid = request.POST['update']).first()
+            inventory = CartHasInventoryBook.objects.all().filter(cart_cart_id = request.user.user1.user_id, book_bookid = book1).first()
+            inventory.quantity = request.POST['number']
+            inventory.save()
+            messages.success(request, 'Your order has been updated!')
+        elif 'delete' in request.POST:
+            CartHasInventoryBook.objects.all().filter(book_bookid = request.POST['delete']).first().delete()
+            book_name = Book.objects.all().filter(bookid = request.POST['delete']).first().title
+            messages.success(request, f'\"{ book_name }\" removed from Cart')
+        elif 'checkout' in request.POST:
+            Order.objects.all().filter(user1_user_id = request.user.user1, processed = False).delete()
+            cart_books = CartHasInventoryBook.objects.all().filter(cart_cart_id=request.user.user1.user_id)
+            too_many = False
+            for item in cart_books:
+                book = Book.objects.all().filter(bookid = item.book_bookid.bookid).first()
+                if(item.quantity > book.quantity):
+                    messages.success(request, f'Only {book.quantity} copies of \"{book.title}\" available. Please reduce the quantity in your cart.')
+            return redirect('checkout')
 
     cart_books = CartHasInventoryBook.objects.all().filter(cart_cart_id = request.user.user1.user_id)
     books = []
+    subtotal = 0
     for i in cart_books:
-        books.append([Book.objects.all().filter(bookid = i.book_bookid.bookid).first(), i.quantity])
+        book = Book.objects.all().filter(bookid = i.book_bookid.bookid).first()
+        books.append([book, i.quantity])
+        subtotal += book.sell_price * i.quantity
+
     context = {
         'books' : books,
+        'subtotal' : subtotal
     }
     return render(request, 'store/myCart.html', context)
 
 def orderHistory(request):
-    return render(request, 'store/orderHistory.html')
+    if request.method == 'POST':
+        if 'reorder' in request.POST:
+            book = Book.objects.all().filter(bookid = request.POST['reorder'].split(':')[0]).first()
+            quantity = request.POST['reorder'].split(':')[1]
+            cart = Cart.objects.all().filter(user1_user_id=request.user.user1).first()
+
+            if CartHasInventoryBook.objects.all().filter(cart_cart=cart, book_bookid=book):
+                inventory = CartHasInventoryBook.objects.all().filter(book_bookid=book).first()
+                inventory.quantity = inventory.quantity + int(quantity)
+            else:
+                inventory = CartHasInventoryBook(cart_cart=cart,
+                                                 book_bookid=Book.objects.all().filter(bookid=book.bookid).first(), quantity=quantity)
+
+            inventory.save()
+
+            messages.success(request, f'\"{Book.objects.all().filter(bookid=book.bookid).first().title}\" added to your Cart!')
+            return redirect('myCart')
+
+            # print(request.POST['reorder'].split(':')[0])
+            # print(request.POST['reorder'].split(':')[1])
+    orders = Order.objects.all().filter(user1_user_id = request.user.user1.user_id, processed = True)
+    history = []
+    for order in orders:
+        ordered_books = OrderedBook.objects.all().filter(order_id = order)
+        books = []
+        for ordered_book in ordered_books:
+            book = Book.objects.all().filter(bookid = ordered_book.book_bookid.bookid).first()
+            books.append([book, ordered_book.quantity])
+        history.append([order, books])
+
+    # for order in history:
+    #     print(order[0].order_id)
+    #     for book in order[1]:
+    #         print(book[0].title)
+
+    context = {
+        'history': history
+    }
+    return render(request, 'store/orderHistory.html', context)
 
 def checkout(request):
-    return render(request, 'store/checkout.html')
+    cart_books = CartHasInventoryBook.objects.all().filter(cart_cart_id=request.user.user1.user_id)
+    books = []
+    code = ""
+    subtotal = 0
+    for i in cart_books:
+        book = Book.objects.all().filter(bookid=i.book_bookid.bookid).first()
+        books.append([book, i.quantity])
+        subtotal += book.sell_price * i.quantity
+
+    if request.method == 'POST':
+        discount = 1.00
+
+        if 'apply' in request.POST:
+            promo_code = Promotion.objects.all().filter(promo_code = request.POST.get('promo_code')).first()
+            if promo_code:
+                if promo_code.end_date > timezone.now():
+                    discount -= float(promo_code.discount) / 100
+                    subtotal = subtotal * discount
+                    code = request.POST.get('promo_code')
+
+                    Order.objects.all().filter(user1_user_id = request.user.user1, processed = False).delete()
+                    order = Order(user1_user_id=request.user.user1, paymentCard_card_id=PaymentCard.objects.all().filter(
+                                    user1_user_id=request.user.user1.user_id).first(), total=subtotal, order_datetime=timezone.now(),
+                                    processed=False)
+                    order.save()
+                else:
+                    messages.success(request, f'Invalid Promo Code')
+            else:
+                messages.success(request, f'Invalid Promo Code')
+        elif 'confirm' in request.POST:
+            if(Order.objects.all().filter(user1_user_id = request.user.user1, processed = False)):
+                order = Order.objects.all().filter(user1_user_id = request.user.user1, processed = False).first()
+                # order.processed = True
+                order.order_datetime = timezone.now()
+                order.save()
+
+            else:
+                order = Order(user1_user_id=request.user.user1, paymentCard_card_id=PaymentCard.objects.all().filter(
+                    user1_user_id=request.user.user1.user_id).first(), total=subtotal, order_datetime=timezone.now(),
+                              processed=False)
+                order.save()
+
+            username = request.user.username
+            first = request.user.first_name
+            last = request.user.last_name
+            confirmation_num = random.randint(100000, 999999)
+            order_id = Order.objects.all().filter(user1_user_id = request.user.user1, processed = False).first().order_id
+            order_date = Order.objects.all().filter(user1_user_id = request.user.user1, processed = False).first().order_datetime
+            order_total = Order.objects.all().filter(user1_user_id = request.user.user1, processed = False).first().total
+            shipping_address = ShippingAddress.objects.all().filter(user1_user_id = request.user.user1).first()
+            cart = Cart.objects.all().filter(user1_user_id = request.user.user1).first()
+            cart_items = CartHasInventoryBook.objects.all().filter(cart_cart = cart.cart_id)
+            books = []
+            for item in cart_items:
+                quantity = item.quantity
+                bookid = item.book_bookid.bookid
+                update_book_quantity(bookid, quantity)
+
+                ordered_book = OrderedBook(order_id = Order.objects.all().filter(user1_user_id = request.user.user1, processed = False).first(), book_bookid = item.book_bookid, quantity = quantity)
+                ordered_book.save()
+
+                books.append(Book.objects.all().filter(bookid = item.book_bookid.bookid).first().title)
+
+            email = request.user.email
+            messages.success(request, f'Purchase processed successfully! Please check your email for more information.')
+
+            subject = 'Order Confirmed.'
+            message = f'Your order has been confirmed!\n' \
+                      f'Order Details:\n\n' \
+                      f'\tName: {last}, {first}\n' \
+                      f'\tConfirmation Number: {confirmation_num}\n' \
+                      f'\tOrder ID: {order_id}\n' \
+                      f'\tOrder Date: {order_date}\n' \
+                      f'\tShipping Info: {shipping_address.street}, {shipping_address.city} {shipping_address.state}, {shipping_address.zip}\n' \
+                      f'\tBooks Ordered:\n'
+
+            for book in books:
+                message += f'\t\t{book}\n'
+
+            message += f'Total: ${order_total}'
+
+            print('recipient: ' + email + '\nHOST_USER: ' + EMAIL_HOST_USER)
+            send_mail(subject, message, EMAIL_HOST_USER, [email], fail_silently=False)
+
+            # clear cart
+            CartHasInventoryBook.objects.all().filter(cart_cart=cart.cart_id).delete()
+
+            order = Order.objects.all().filter(user1_user_id=request.user.user1, processed=False).first()
+            order.processed = True
+            order.save()
+
+            return redirect('home')
+
+    context = {
+        'books': books,
+        'subtotal': subtotal,
+        'code': code
+    }
+    return render(request, 'store/checkout.html', context)
+
+def update_book_quantity(bookid, quantity):
+    book = Book.objects.all().filter(bookid = bookid).first()
+    book.quantity -= quantity
+    book.save()
+    return
+
+def search(request):
+    if request.method == 'POST':
+        if 'search' in request.POST:
+            input = (request.POST.get('search')).lower()
+            books = Book.objects.all().exclude(quantity='0')
+            queryset = []
+            for book in books:
+                if input in book.title.lower():
+                    queryset.append(book)
+                elif input in book.isbn:
+                    queryset.append(book)
+                elif input in book.author.lower():
+                    queryset.append(book)
+                elif input in book.category.lower():
+                    queryset.append(book)
+
+            context = {
+                'books': queryset,
+            }
+            return render(request, 'store/search.html', context)
+        elif 'add_to_cart' in request.POST:
+            book = request.POST['add_to_cart']
+            cart = Cart.objects.all().filter(user1_user_id=request.user.user1).first()
+
+            if CartHasInventoryBook.objects.all().filter(cart_cart=cart, book_bookid=book):
+                inventory = CartHasInventoryBook.objects.all().filter(book_bookid=book).first()
+                inventory.quantity = inventory.quantity + 1
+            else:
+                inventory = CartHasInventoryBook(cart_cart=cart,
+                                                 book_bookid=Book.objects.all().filter(bookid=book).first())
+
+            inventory.save()
+
+            messages.success(request, f'\"{Book.objects.all().filter(bookid=book).first().title}\" added to your Cart!')
+            return redirect('myCart')
+    else:
+        books = Book.objects.all()
+
+    context = {
+        'books': books,
+    }
+
+    return render(request, 'store/search.html', context)
 
 def checkoutConfirmation(request):
     return render(request, 'store/checkoutConfirmation.html')
 
 def suspended(request):
     return render(request, 'store/suspended.html')
+
+def inactive(request):
+    return render(request, 'store/inactive.html')
+
+def confirm_account(request):
+    code = request.user.user1.user_code
+    input = request.POST.get('code')
+
+    if request.method == 'POST':
+        if code == input:
+            user1 = request.user.user1
+            user1.user_active = True
+            user1.save()
+            messages.success(request, 'You have confirmed your account!')
+            return redirect('home')
+        else:
+            print('invalid')
+            messages.success(request, f'Invalid confirmation code.')
+
+
+    return render(request, 'store/confirm_account.html')
 
 def password_reset(request):
     if request.method == 'POST':
@@ -269,8 +550,8 @@ def manage_promos(request):
                 recipient_list = User1.objects.all().filter(receive_promotions = True)
                 email_list = [User.objects.all().filter(username = i.user).first().email for i in recipient_list]
 
-                subject = 'New Promo!'
-                message = 'You have received a new promo for ' + request.POST['discount'] + '% off'
+                subject = 'New Promotion!'
+                message = 'You have received a new promo for ' + request.POST['discount'] + '% off\nThe Promo Code is: ' + request.POST['promo_code']
 
                 # print('recipient: ' + email_list + '\nHOST_USER: ' + EMAIL_HOST_USER)
 

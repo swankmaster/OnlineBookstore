@@ -1,11 +1,78 @@
 {% extends "store/base.html" %}
 {% load static %}
+{% load extras %}
 {% block content %}
-		<h2>Credit Card on file: 1234-4321-5678-8765</h2>
-		<h2>Exp. Date: 01/2026</h2>
-		<h2>CVV: 111</h2>
-		<input type="button" onclick="location.href={% url 'edit_profile %};" value="Change Card">
-		<h2>Address on file: 123 Mapple Drive, Atlanta, GA, 30003</h2>
-		<input type="button" onclick="location.href={% url 'edit_profile' %};" value="Change Address">
-		<input type="button" onclick="location.href={% url 'checkoutConfirmation' %};" value="Proceed With Purchase">
+    <h1 class="page-title">Checkout</h1>
+    {% if not books %}
+        <h2>Your cart is empty.</h2>
+    {% else %}
+		<div class="content-section">
+			<table border=1 frame=void rules=rows style="width:100%:">
+				<colgroup>
+							<col span="1" style="width: 33%;">
+							<col span="1" style="width: 33%;">
+							<col span="1" style="width: 34%;">
+				</colgroup>
+				<tr>
+					<td><u>Title</td>
+					<td><u>Quantity</td>
+					<td><u>Price</td>
+				</tr>
+				{% for book in books %}
+					<tr>
+						<td> {{ book.0.title }} </td>
+						<td> {{ book.1 }} </td>
+						<td> ${{ book.0.sell_price|multiply:book.1|floatformat:2}} <td>
+					</tr>
+				{% endfor %}
+					<tr><td> </td></tr>
+					<tr>
+						<td> </td>
+						<td><h5>Subtotal: </h5></td>
+						<td><h5>${{ subtotal|floatformat:2 }}</h5></td>
+					</tr>
+				{% if code %}
+					<tr>
+						<td> </td>
+						<td></td>
+							<td>Applied: {{ code }}</td>
+					</tr>
+				{% endif %}
+			</table>
+		</div>
+
+		<div class="content-section">
+			<table border=1 frame=void rules=rows style="width:100%:">
+				<colgroup>
+							<col span="1" style="width: 5%;">
+							<col span="1" style="width: 15%;">
+							<col span="1" style="width: 25%;">
+				</colgroup>
+				<tr>
+					<td> </td>
+					<td> </td>
+					<td> </td>
+				</tr>
+				<tr>
+					<td>Promo Code:</td>
+					<td>
+						<form method ="POST">
+                			{% csrf_token %}
+							<input type="text" id="promo_code" name="promo_code"/>
+							<button class="btn btn-dark" type="apply" value="" name="apply">Apply</button>
+						</form>
+					</td>
+					<td>Note: Only one promo can be applied at a time.</td>
+				</tr>
+			</table>
+
+		</div>
+
+        <div class="coming">
+            <form method ="POST">
+                {% csrf_token %}
+                <button class="btn btn-light" type="confirm" value="" name="confirm">Confirm Order</button>
+            </form>
+        </div>
+    {% endif %}
 {% endblock content%}

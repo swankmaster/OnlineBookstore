@@ -14,7 +14,7 @@
                             <span class="asteriskField">*</span>
                         </label>
                         <div class="">
-                            <input type="text" id="old_password" name="email" class="textinput textInput form-control">
+                            <input type="password" id="old_password" name="email" class="textinput textInput form-control">
                             <small id="hint_id_old_password" class="form-text text-muted">Enter your current password.</small>
                         </div>
                         </div>
@@ -81,6 +81,7 @@
                             <form method ="POST">
                                 {% csrf_token %}
                                 <button class="btn btn-dark" type="delete" value="{{ card.card_id }}" name="delete">Delete</button>
+                            </form>
                             </td>
                         </tr>
                         {% endfor %}
@@ -90,5 +91,17 @@
                         </tr>
                     {% endif %}
             </table>
+        </div>
+        <div class = "content-section">
+            <form method ="POST">
+                {% csrf_token %}
+                <fieldset>
+                    <legend class="border-bottom mb-4">Update Shipping Address</legend>
+                     {{ address_form | crispy }}
+                </fieldset>
+                <div>
+                    <button class="btn btn-dark" type="submit" name="addSubmit">Create</button>
+                </div>
+            </form>
         </div>
 {% endblock content%}

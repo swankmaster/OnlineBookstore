@@ -57,12 +57,22 @@ class Order(models.Model):
     user1_user_id = models.ForeignKey('User1', models.DO_NOTHING,  default="", db_column='User1_user_id')  # Field name made lowercase.
     paymentCard_card_id = models.ForeignKey('PaymentCard', models.DO_NOTHING, db_column='PaymentCard_card_id')  # Field name made lowercase.
     total = models.CharField(max_length=45, blank=True, null=True)
-    promotion_promo = models.ForeignKey('Promotion', models.DO_NOTHING, db_column='Promotion_promo_id', null=True)  # Field name made lowercase.
+    promotion_promo = models.ForeignKey('Promotion', models.DO_NOTHING, db_column='Promotion_promo_code', null=True)  # Field name made lowercase.
     order_datetime = models.DateTimeField(blank=True, null=True)
+    processed = models.BooleanField(default=False)
 
     class Meta:
         managed = True
         db_table = 'Order'
+
+class OrderedBook(models.Model):
+    order_id = models.ForeignKey(Order, models.DO_NOTHING, db_column='Order.order_id')
+    book_bookid = models.ForeignKey(Book, models.DO_NOTHING, db_column='Book_bookID')
+    quantity = models.IntegerField(default=1)
+
+    class Meta:
+        managed = True
+        db_table = 'OrderedBook'
 
 
 class PaymentCard(models.Model):
@@ -79,9 +89,23 @@ class PaymentCard(models.Model):
         managed = True
         db_table = 'PaymentCard'
 
+class ShippingAddress(models.Model):
+
+    address_id = models.IntegerField(primary_key=True, db_column='ShippingAddress_address_id')
+    street = models.CharField(max_length=45, blank=True, null=True)
+    city = models.CharField(max_length=45, blank=True, null=True)
+    state = models.CharField(max_length=45, blank=True, null=True)
+    zip = models.CharField(max_length=45, blank=True, null=True)
+    user1_user_id = models.OneToOneField('User1', models.DO_NOTHING,  default="", db_column='User1_user_id')  # Field name made lowercase.
+
+    class Meta:
+        managed = True
+        db_table = 'ShippingAddress'
+
 
 class Promotion(models.Model):
     promo_id = models.IntegerField(primary_key=True)
+    promo_code = models.CharField(max_length=45)
     start_date = models.DateTimeField(db_column='start_date', blank=True, null=True)  # Field name made lowercase.
     end_date = models.DateTimeField(db_column='end_date', blank=True, null=True)  # Field name made lowercase.
     discount = models.CharField(max_length=45, blank=True, null=True)
@@ -115,7 +139,8 @@ class User1(models.Model):
     receive_promotions = models.BooleanField(default=False)
     status = models.CharField(max_length=45, blank=True, null=True)
     user_suspend = models.BooleanField(db_column='user_suspend', default=False)  # Field name made lowercase.
-    usercol = models.CharField(db_column='Usercol', max_length=45, blank=True, null=True)  # Field name made lowercase.
+    user_code = models.CharField(max_length=45, default="123")
+    user_active = models.BooleanField(db_column='user_active', default=False)
 
     # def __str__(self):
     #     return self.user.username

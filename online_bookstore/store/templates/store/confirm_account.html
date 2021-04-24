@@ -1,0 +1,30 @@
+{% extends "store/base.html" %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% block content %}
+        <h2 class="page-title">Confirm Account</h2>
+        <div class="content-section">
+            <form method ="POST">
+                {% csrf_token %}
+                    <fieldset class="form-group">
+                        <div class="form-group">
+                            <label class="requiredField">
+                                Confirmation Code:
+                                <span class="asteriskField">*</span>
+                            </label>
+                            <div class="">
+                                <input type="text" id="code" name="code" class="textinput textInput form-control">
+                                <small id="hint_id_email" class="form-text text-muted">Enter the code you received in your email.</small>
+                            </div>
+
+                        </div>
+
+                    </fieldset>
+                    <div class="form-group">
+                        <button class="btn btn-outline-info" type="submit" name="submit">Submit</button>
+                    </div>
+            </form>
+        </div>
+{% endblock content%}
+
+

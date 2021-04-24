@@ -1,0 +1,49 @@
+{% extends "store/base.html" %}
+{% load static %}
+{% block content %}
+    <h1 class="page-title">All Books</h1>
+    <div style ="text-align: center">
+            <form method ="POST">
+                {% csrf_token %}
+                <input type="text" id="search" name="search" placeholder="Search Books!">
+                    <button class="btn btn-dark">Search</button>
+                </input>
+            </form>
+    </div>
+    <main>
+        <table border=1 frame=void rules=rows style="width:100%:">
+            {% if not books %}
+                <h3>No search results. </h3>
+            {% else %}
+                {% for book in books %}
+                    <colgroup>
+                        <col span="1" style="width: 20%;">
+                        <col span="1" style="width: 20%;">
+                        <col span="1" style="width: 40%;">
+                        <col span="1" style="width: 10%;">
+                        <col span="1" style="width: 10%;">
+                    </colgroup>
+                    <tr>
+
+                      <td><img src = "{% static 'store/images/' %}{{ book.cover_picture }}"  atl = {{ book.title }} width = "150"></td></td>
+                      <td><h3>{{ book.title }} </h3></td>
+                      <td> {{ book.description }} </td>
+                    <td>${{book.sell_price|floatformat:2}} <td>
+                        {% if user.is_authenticated %}
+                            {% if user.user1.user_suspend %}
+                                <button class="btn btn-outline-info" name="addToCart" onclick = "location.href={% url 'suspended' %};"><img src = "{% static 'store/images/cart.png' %}" width = "25" height = "25"></button>
+                            {% else %}
+                                <td>
+                                <form method ="POST">
+                                    {% csrf_token %}
+                                    <button class="btn btn-outline-info" name="add_to_cart" type="add_to_cart" value="{{ book.bookid }}" ><img src = "{% static 'store/images/cart.png' %}" width = "25" height = "25"></button>
+                                </form>
+                                </td>
+                            {% endif %}
+                        {% endif %}
+                   </tr>
+                {% endfor %}
+            {% endif %}
+        </table>
+    </main>
+{% endblock content%}

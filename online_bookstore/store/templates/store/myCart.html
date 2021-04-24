@@ -1,26 +1,57 @@
 {% extends "store/base.html" %}
 {% load static %}
+{% load extras %}
 {% block content %}
     <h1 class="page-title">My Cart</h1>
-    <table border=1 frame=void rules=rows style="width:100%:">
-        <colgroup>
-                    <col span="1" style="width: 20%;">
-                    <col span="1" style="width: 20%;">
-                    <col span="1" style="width: 40%;">
-                    <col span="1" style="width: 10%;">
-                    <col span="1" style="width: 10%;">
-        </colgroup>
-    {% for book in books %}
-        <tr>
-            <td><img src = "{% static 'store/images/' %}{{ book.0.cover_picture }}"  atl = {{ book.0.title }} width = "150"></td></td>
-            <td> {{ book.0.title }} </td>
-            <td> ${{book.0.sell_price|floatformat:2}} <td>
+    {% if not books %}
+        <h2>Your cart is empty.</h2>
+    {% else %}
+        <table border=1 frame=void rules=rows style="width:100%:">
+            <colgroup>
+                        <col span="1" style="width: 5%;">
+                        <col span="1" style="width: 25%;">
+                        <col span="1" style="width: 25%;">
+                        <col span="1" style="width: 10%;">
+                        <col span="1" style="width: 10%;">
+            </colgroup>
+            <tr>
+                <td></td>
+                <td><u>Title</td>
+                <td><u>Quantity</td>
+                <td><u>Price</td>
+                <td> </td>
+            </tr>
+            {% for book in books %}
+                <tr>
+                    <td><img src = "{% static 'store/images/' %}{{ book.0.cover_picture }}"  atl = {{ book.0.title }} width = "75"></td>
+                    <td> {{ book.0.title }} </td>
+                    <td>
+                    <form method ="POST">
+                        {% csrf_token %}
+                        <input type="number" id="quantity" name="number" value="{{ book.1 }}" min="1" max="{{ book.0.quantity }}" />
+                        <button class="btn btn-dark" type="update" value="{{ book.0.bookid }}" name="update">Update</button>
+                    </form>
+                    </td>
+                    <td> ${{ book.0.sell_price|floatformat:2}} <td>
+                    <form method ="POST">
+                        {% csrf_token %}
+                        <button class="btn btn-dark" type="delete" value="{{ book.0.bookid }}" name="delete">Delete</button>
+                    </form>
+                </tr>
+            {% endfor %}
+                <tr>
+                    <td> </td>
+                    <td> </td>
+                    <td><h5>Subtotal: </h5></td>
+                    <td><h5>${{ subtotal|floatformat:2 }}</h5></td>
+                    <td></td>
+                </tr>
+        </table>
+        <div class="coming">
             <form method ="POST">
                 {% csrf_token %}
-                <input type="number" id="quantity" name="number" value="{{ book.1 }}" min="1" max="{{ book.0.quantity }}" />
-                <button class="btn btn-dark" type="update" value="{{ book.0.bookid }}" name="update">Update</button>
+                <button class="btn btn-light" type="checkout" value="" name="checkout">Checkout</button>
             </form>
-        </tr>
-    {% endfor %}
-    </table>
+        </div>
+    {% endif %}
 {% endblock content%}

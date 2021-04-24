@@ -10,28 +10,50 @@
                     {% csrf_token %}
                      <legend>Add Promotion</legend>
                         <fieldset>
-                                {{ p_form.as_table }}
+                                <table border=1 frame=void rules=rows style="width:100%:">
+                                    <colgroup>
+                                        <col span="1" style="width: 2%;">
+                                        <col span="1" style="width: 18%;">
+                                        <col span="1" style="width: 18%;">
+                                        <col span="1" style="width: 18%;">
+                                        <col span="1" style="width: 18%;">
+                                        <col span="1" style="width: 18%;">
+                                        <col span="1" style="width: 18%;">
+                                        <col span="1" style="width: 19%;">
+                                    </colgroup>
+                                    <tr>
+                                        <td>Code</td>
+                                        <td><u>Start Date</td>
+                                        <td><u>End Date</td>
+                                        <td><u>Discount</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td>{{ p_form.promo_code }}</td>
+                                        <td>{{ p_form.start_date }}</td>
+                                        <td>{{ p_form.end_date }}</td>
+                                        <td>{{ p_form.discount }}</td>
+                                        <td><button class="btn btn-dark" type="submit" name="infoSubmit">Create</button></td>
+                                    </tr>
+                            </table>
                         </fieldset>
-                    <div>
-                        <button class="btn btn-dark" type="submit" name="infoSubmit">Create</button>
-                    </div>
                 </form>
         </div>
         <div class="content-section">
             <legend class="form-group">Active Promotions</legend>
             <table border=1 frame=void rules=rows style="width:100%:">
                 <colgroup>
-                        <col span="1" style="width: 2%;">
-                        <col span="1" style="width: 18%;">
-                        <col span="1" style="width: 18%;">
-                        <col span="1" style="width: 18%;">
-                        <col span="1" style="width: 18%;">
+                        <col span="1" style="width: 10%;">
+                        <col span="1" style="width: 16%;">
+                        <col span="1" style="width: 16%;">
+                        <col span="1" style="width: 16%;">
+                        <col span="1" style="width: 16%;">
                         <col span="1" style="width: 18%;">
                         <col span="1" style="width: 18%;">
                         <col span="1" style="width: 19%;">
                  </colgroup>
                 <tr>
-                    <td><u>ID</td>
+                    <td><u>Code</td>
                     <td><u>Email Status</td>
                     <td><u>Start Date</td>
                     <td><u>End Date</td>
@@ -42,7 +64,7 @@
                 <td></td>
             {% for active_promo in active_promos %}
                 <tr>
-                    <td>{{ active_promo.promo_id }}</td>
+                    <td>{{ active_promo.promo_code }}</td>
                     <td>Sent</td>
                     <td>{{ active_promo.start_date|date:"M d Y, H:i" }}</td>
                     <td>{{ active_promo.end_date|date:"M d Y, H:i" }}</td>
@@ -57,17 +79,17 @@
             <legend class="form-group">Inactive Promotions</legend>
             <table border=1 frame=void rules=rows style="width:100%:">
                 <colgroup>
-                        <col span="1" style="width: 2%;">
-                        <col span="1" style="width: 18%;">
-                        <col span="1" style="width: 18%;">
-                        <col span="1" style="width: 18%;">
-                        <col span="1" style="width: 18%;">
+                        <col span="1" style="width: 10%;">
+                        <col span="1" style="width: 16%;">
+                        <col span="1" style="width: 16%;">
+                        <col span="1" style="width: 16%;">
+                        <col span="1" style="width: 16%;">
                         <col span="1" style="width: 18%;">
                         <col span="1" style="width: 18%;">
                         <col span="1" style="width: 19%;">
                  </colgroup>
                 <tr>
-                    <td><u>ID</td>
+                    <td><u>Code</td>
                     <td><u>Email Status</td>
                     <td><u>Start Date</td>
                     <td><u>End Date</td>
@@ -78,7 +100,7 @@
                 <td></td>
             {% for inactive_promo in inactive_promos %}
                 <tr>
-                    <td>{{ inactive_promo.promo_id }}</td>
+                    <td>{{ inactive_promo.promo_code }}</td>
                     <td>Sent</td>
                     <td>{{ inactive_promo.start_date|date:"M d Y, H:i" }}</td>
                     <td>{{ inactive_promo.end_date|date:"M d Y, H:i" }}</td>
@@ -87,6 +109,7 @@
                     <form method ="POST">
                         {% csrf_token %}
                         <button class="btn btn-dark" type="delete" value="{{ inactive_promo.promo_id }}" name="delete">Delete</button>
+                    </form>
                </tr>
             {% endfor %}
         </table>

@@ -7,6 +7,12 @@ def subtract(value, arg):
     return value - arg
 
 @register.filter
+def multiply(value, arg):
+    print('test: ')
+    print(arg)
+    return float(value) * float(arg)
+
+@register.filter
 def seconds(value):
     return value.seconds
 
@@ -48,3 +54,8 @@ def last_4(value):
     else:
         last = value
     return(last)
+
+@register.filter
+def print(value):
+    print(value)
+    return(value)

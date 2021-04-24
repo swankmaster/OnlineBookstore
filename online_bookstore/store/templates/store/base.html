@@ -1,4 +1,5 @@
 {% load static %}
+{% load extras %}
 <!DOCTYPE HTML>
 <html lang="en">
     <head>
@@ -20,13 +21,25 @@
                 </button>
                 <div class="collapse navbar-collapse" id="navbarToggle">
                     <div class="navbar-nav mr-auto">
-                        <a class="nav-item nav-link" href="{% url 'home' %}">Home</a>
+                        <a class="nav-item nav-link" href="{% url 'search' %}">Search</a>
                         {% if user.is_authenticated %}
                             {% if user.user1.user_suspend %}
                                 <meta http-equiv="refresh" content="0; URL={% url 'suspended' %}">
                             {% else %}
-                                <a class="nav-item nav-link" href="{% url 'myCart' %}">My Cart</a>
-                                <a class="nav-item nav-link" href="{% url 'orderHistory' %}">Order History</a>
+                                {% if not request.user.user1.user_active %}
+                                    <a class="nav-item nav-link" href="{% url 'inactive' %}">My Cart</a>
+                                {% else %}
+                                    <a class="nav-item nav-link" href="{% url 'myCart' %}">My Cart</a>
+                                {% endif %}
+                                {% if not request.user.user1.user_active %}
+                                    <a class="nav-item nav-link" href="{% url 'inactive' %}">Order History</a>
+                                {% else %}
+                                    <a class="nav-item nav-link" href="{% url 'orderHistory' %}">Order History</a>
+                                {% endif %}
+
+                                {% if not request.user.user1.user_active %}
+                                    <a class="nav-item nav-link" href="{% url 'confirm_account' %}">Confirm Account</a>
+                                {% endif %}
                                 {% if request.user.is_superuser %}
                                     <li class="nav-item dropdown">
                                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -70,12 +83,20 @@
 
 
         <header>
-            <div class="text-left">
+            <div class="container">
+                {% if not request.user.user1.user_active %}
+                    <div class="behind">
+                        Confirm Your Account Now
+                    </div>
+                {% endif %}
+                <div class="behind">
                 {% if messages %}
+                    <div> </div>
                     {% for message in messages %}
-                        <td>&nbsp{{ message }}
+                    <h4>&nbsp{{ message }} </h4>
                     {% endfor %}
                 {% endif %}
+                </div>
             </div>
         </header>
 
