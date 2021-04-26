@@ -6,42 +6,84 @@
     <div class="content-section">
         <form method ="POST">
                 {% csrf_token %}
+                {% if not new_book %}
+                    <fieldset class="form-group">
+                        <legend class="border-bottom mb-4">Create Book</legend>
+                    </fieldset>
+                    <div class="form-group">
+                        <button class="btn btn-dark" type="submit" name="create">Create New</button>
+                    </div>
+                {% else %}
                     <fieldset class="form-group">
                         <legend class="border-bottom mb-4">Create Book</legend>
                         {{ form | crispy }}
                     </fieldset>
                     <div class="form-group">
-                        <button class="btn btn-dark" type="submit">Create</button>
+                        <button class="btn btn-dark" type="submit" name="submit_new">Create</button>
                     </div>
+                {% endif %}
             </form>
     </div>
+    <div class="content-section">
+        <form method ="POST">
+                {% csrf_token %}
+                    <fieldset class="form-group">
+                        <legend class="border-bottom mb-4">Edit Book</legend>
+                    </fieldset>
+                {% if not submit %}
+                        <input type="text" id="book" name="book" class="textinput textInput form-control">
+                        <small id="hint_id_old_password" class="form-text text-muted">Enter the Book ID you would like to edit.</small>
+                    <div class="form-group">
+                        <button class="btn btn-dark" type="submit" name="submit_book">Submit</button>
+                    </div>
+                {% else %}
+                    {{ edit_form | crispy }}
+                    <div class="form-group">
+                        <button class="btn btn-dark" type="submit" name="submit_edit" value="{{ book_id }}">Update</button>
+                    </div>
+                {% endif %}
+            </form>
+    </div>
+
     <div class="content-section">
             <table border=1 frame=void rules=rows style="width:100%:">
                 <legend class="form-group">All Books</legend>
                 <colgroup>
-                        <col span="1" style="width: 10%;">
-                        <col span="1" style="width: 10%;">
-                        <col span="1" style="width: 10%;">
-                        <col span="1" style="width: 10%;">
-                        <col span="1" style="width: 10%;">
-                        <col span="1" style="width: 10%;">
+                        <col span="1" style="width: 3%;">
+                        <col span="1" style="width: 20%;">
+                        <col span="1" style="width: 11%;">
+                        <col span="1" style="width: 9%;">
+                        <col span="1" style="width: 9%;">
+                        <col span="1" style="width: 8%;">
+                        <col span="1" style="width: 8%;">
+                        <col span="1" style="width: 7%;">
                  </colgroup>
                 <tr>
+                    <td><u>ID</u></td>
                     <td><u>Title</td>
                     <td><u>Author</td>
                     <td><u>Quantity</td>
                     <td><u>Minimum Threshold</td>
                     <td><u>Buy Price</td>
                     <td><u>Sell Price</td>
+                    <td>  </td>
+
                </tr>
             {% for book in books %}
                 <tr>
+                    <td>{{ book.bookid }}</td>
                     <td>{{ book.title }}</td>
                     <td>{{ book.author }}</td>
                     <td>{{ book.quantity }}</td>
                     <td>{{ book.minimum_threshold }}</td>
                     <td>{{ book.buy_price }}</td>
                     <td>{{ book.sell_price }}</td>
+                    <td>
+                        <form method ="POST">
+                            {% csrf_token %}
+                            <button class="btn btn-dark" type="delete" value="{{ book.bookid }}" name="delete">Delete</button>
+                    </form>
+                    </td>
                 </tr>
             {% endfor %}
         </table>

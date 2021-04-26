@@ -44,7 +44,7 @@ class Cart(models.Model):
 
 class CartHasInventoryBook(models.Model):
     cart_cart = models.ForeignKey(Cart, models.DO_NOTHING, db_column='Cart_cart_id')  # Field name made lowercase.
-    book_bookid = models.ForeignKey(Book, models.DO_NOTHING, db_column='Book_bookID')  # Field name made lowercase.
+    book_bookid = models.ForeignKey(Book, models.SET_NULL, db_column='Book_bookID', null=True)  # Field name made lowercase.
     quantity = models.IntegerField(default=1)
 
     class Meta:
@@ -66,8 +66,8 @@ class Order(models.Model):
         db_table = 'Order'
 
 class OrderedBook(models.Model):
-    order_id = models.ForeignKey(Order, models.DO_NOTHING, db_column='Order.order_id')
-    book_bookid = models.ForeignKey(Book, models.DO_NOTHING, db_column='Book_bookID')
+    order_id = models.ForeignKey(Order, models.SET_NULL, db_column='Order.order_id', null=True)
+    book_bookid = models.ForeignKey(Book, models.SET_NULL, db_column='Book_bookID', null=True)
     quantity = models.IntegerField(default=1)
 
     class Meta:

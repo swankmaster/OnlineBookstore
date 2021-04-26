@@ -70,6 +70,16 @@
 		<div class="content-section">
 			<form method ="POST">
 				{% csrf_token %}
+					<large><b>Shipping Address:</b></large>
+					{{address_form|crispy}}
+				<div>
+                    <button class="btn btn-dark" type="submit" name="update">Update</button>
+                </div>
+			</form>
+		</div>
+		<div class="content-section">
+			<form method ="POST">
+				{% csrf_token %}
 				{% if cards %}
 					<table border=1 frame=void rules=rows style="width:100%:">
 						<large><b>Select a payment method:</b></large>
@@ -90,7 +100,7 @@
 				{% else %}
 					<large><b>Enter Payment Information:</b></large>
 					{{form|crispy}}
-			{% endif %}
+				{% endif %}
 			</table>
 		</div>
         <div class="coming">

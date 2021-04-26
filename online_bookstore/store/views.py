@@ -1,7 +1,12 @@
+from django.contrib.auth.tokens import default_token_generator
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import UserCreationForm, PasswordResetForm
 from django.contrib import messages
+from django.template.loader import render_to_string
+from django.utils.encoding import force_bytes
+from django.utils.http import urlsafe_base64_encode
+
 from .forms import UserRegisterForm, User1RegisterForm, UpdateUserInfoForm, UpdateUser1InfoForm, NewPasswordForm, CreditCardForm, NewPromoForm, SuspendUserForm, CreateBookForm, AddressForm
 from .models import Book, PaymentCard, Promotion, User1, Cart, CartHasInventoryBook, ShippingAddress, Order, OrderedBook
 from django.contrib.auth.models import User
@@ -55,7 +60,7 @@ def home(request):
 
             messages.success(request, f'\"{Book.objects.all().filter(bookid = book).first().title}\" added to your Cart!')
 
-    if not Book.objects.all():
+    if Book.objects.all().count() < 8:
         for book in books:
             b = Book(book[0], book[1], book[2], book[3], book[4], book[5], book[6], book[7], book[8], book[9], book[10], book[11], book[12], book[13], book[14])
             b.save()
@@ -181,6 +186,7 @@ def edit_profile(request):
                     payment = pay_form.save(commit=False)
                     payment.user1_user_id = request.user.user1
                     payment.save()
+                    messages.success(request, f'New payment method saved.')
                     return redirect('edit_profile')
                 else:
                     too_many = True
@@ -215,6 +221,7 @@ def edit_profile(request):
                 PaymentCard.objects.all().filter(card_id=id).first().delete()
 
             cards = PaymentCard.objects.all().filter(user1_user_id=request.user.user1)
+            messages.success(request, f'Payment method deleted.')
             return redirect('edit_profile')
 
         elif 'addSubmit' in request.POST:
@@ -231,6 +238,7 @@ def edit_profile(request):
             address.user1_user_id = request.user.user1
             address.save()
 
+            messages.success(request, f'Shipping Address Updated.')
             cards = PaymentCard.objects.all().filter(user1_user_id=request.user.user1)
 
     else:
@@ -333,6 +341,7 @@ def orderHistory(request):
 
 def checkout(request):
     cart_books = CartHasInventoryBook.objects.all().filter(cart_cart_id=request.user.user1.user_id)
+    address_form = AddressForm(instance=ShippingAddress.objects.all().filter(user1_user_id=request.user.user1).last())
     books = []
     code = ""
     subtotal = 0
@@ -368,10 +377,12 @@ def checkout(request):
                 messages.success(request, f'You must select or enter a payment method')
             else:
                 card = PaymentCard
+                hasCard = True
                 if (PaymentCard.objects.all().filter(user1_user_id=request.user.user1.user_id)):
                     card = PaymentCard.objects.all().filter(
                         user1_user_id=request.user.user1.user_id, card_id = request.POST.get('select')).first()
                 else:
+                    hasCard = False
                     if form.is_valid:
                         card = form.save(commit=False)
                         card.user1_user_id = request.user.user1
@@ -385,9 +396,13 @@ def checkout(request):
                     order.save()
 
                 else:
-                    order = Order(user1_user_id=request.user.user1, total=subtotal, order_datetime=timezone.now(),
-                                  processed=False)
-                    order.paymentCard_card_id = card
+                    if hasCard:
+                        order = Order(user1_user_id=request.user.user1, total=subtotal, order_datetime=timezone.now(),
+                                      processed=False, paymentCard_card_id=card)
+                    else:
+                        order = Order(user1_user_id=request.user.user1, total=subtotal, order_datetime=timezone.now(),
+                                      processed=False, paymentCard_card_id=card.card_id)
+
                     order.save()
 
                 username = request.user.username
@@ -412,7 +427,6 @@ def checkout(request):
                     books.append(Book.objects.all().filter(bookid = item.book_bookid.bookid).first().title)
 
                 email = request.user.email
-                messages.success(request, f'Purchase processed successfully! Please check your email for more information.')
 
                 subject = 'Order Confirmed.'
                 message = f'Your order has been confirmed!\n' \
@@ -435,11 +449,18 @@ def checkout(request):
                 # clear cart
                 CartHasInventoryBook.objects.all().filter(cart_cart=cart.cart_id).delete()
 
-                order = Order.objects.all().filter(user1_user_id=request.user.user1, processed=False).first()
-                order.processed = True
-                order.save()
+                return redirect('checkoutConfirmation')
+        elif 'update' in request.POST:
+            address_form = AddressForm(request.POST, instance=ShippingAddress.objects.all().filter(
+                user1_user_id=request.user.user1).first())
 
-                return redirect('home')
+            if ShippingAddress.objects.all().filter(user1_user_id=request.user.user1):
+                ShippingAddress.objects.all().filter(user1_user_id=request.user.user1).last().delete()
+
+            address = address_form.save(commit=False)
+            address.user1_user_id = request.user.user1
+            address.save()
+            messages.success(request, f'Shipping Address Updated.')
 
     cards = PaymentCard.objects.all().filter(user1_user_id = request.user.user1)
 
@@ -448,7 +469,8 @@ def checkout(request):
         'subtotal': subtotal,
         'code': code,
         'cards': cards,
-        'form': form
+        'form': form,
+        'address_form': address_form,
     }
     return render(request, 'store/checkout.html', context)
 
@@ -503,7 +525,22 @@ def search(request):
     return render(request, 'store/search.html', context)
 
 def checkoutConfirmation(request):
-    return render(request, 'store/checkoutConfirmation.html')
+    if Order.objects.all().filter(user1_user_id=request.user.user1, processed=False).first():
+        messages.success(request, f'Purchase processed successfully! Please check your email for more information.')
+        order = Order.objects.all().filter(user1_user_id=request.user.user1, processed=False).first()
+        address = ShippingAddress.objects.all().filter(user1_user_id=request.user.user1).first()
+
+        order.processed = True
+        order.save()
+    else:
+        return redirect('home')
+
+    context = {
+        'order': order,
+        'address': address,
+    }
+
+    return render(request, 'store/checkoutConfirmation.html', context)
 
 def suspended(request):
     return render(request, 'store/suspended.html')
@@ -530,31 +567,43 @@ def confirm_account(request):
     return render(request, 'store/confirm_account.html')
 
 def password_reset(request):
+    submitted = False
     if request.method == 'POST':
-        p_form = NewPasswordForm(request.POST)
-
-        email = request.POST['email'].strip()
-        old_password = request.POST['old_password'].strip()
-
-        if email and old_password and p_form.is_valid():
+        password_reset_form = PasswordResetForm(request.POST)
+        if password_reset_form.is_valid():
+            email = password_reset_form.cleaned_data['email']
             user = User.objects.all().filter(email=email).first()
 
-            if user.check_password(old_password):
-                user1 = p_form.save(commit=False)
-                user1.username = user.username
-                messages.success(request, f'Password updated for {user.username}!')
-                return redirect('home')
-            else:
-                messages.success(request, f'Information is incorrect.')
-        else:
-            messages.success(request, f'Information is incorrect.')
-    else:
-        p_form = NewPasswordForm()
+            if user:
+                subject = "Password Reset Requested"
+                email_template_name = "store/reset_email.txt"
+                c = {
+                    "email": user.email,
+                    'domain': '127.0.0.1:8000',
+                    'site_name': 'Website',
+                    "uid": urlsafe_base64_encode(force_bytes(user.pk)),
+                    "user": user,
+                    'token': default_token_generator.make_token(user),
+                    'protocol': 'http',
+                }
+                email = render_to_string(email_template_name, c)
+                send_mail(subject, email, EMAIL_HOST_USER, [user.email], fail_silently=False)
+                return redirect("/password_reset/done/")
 
+    password_reset_form = PasswordResetForm()
     context = {
-        'p_form': p_form,
+        'password_reset_form': password_reset_form,
     }
     return render(request, 'store/password_reset.html', context)
+
+def password_reset_confirm(request):
+    return render(request, 'store/password_reset_confirm.html')
+
+def password_reset_done(request):
+    return render(request, 'store/password_reset_done.html')
+
+def password_reset_complete(request):
+    return render(request, 'store/password_reset_confirm.html')
 
 def manage_promos(request):
     if request.method == 'POST':
@@ -606,31 +655,65 @@ def manage_promos(request):
 
 
 def manage_books(request):
+    new_book = False
+    submit = False
+    book_id = ''
     if request.method == 'POST':
-        form = CreateBookForm(request.POST)
-        if form.is_valid():
+        if 'create' in request.POST:
+            form = CreateBookForm()
+            edit_form = CreateBookForm()
+            new_book = True
 
-            book = form.save(commit=False)
-            book.cover_picture = request.POST['cover_picture']
-            book.save()
+        if 'submit_new' in request.POST:
+            form = CreateBookForm(request.POST)
+            edit_form = CreateBookForm()
+            if form.is_valid():
+                book = form.save(commit=False)
+                book.cover_picture = request.POST['cover_picture']
+                book.save()
 
-            messages.success(request, f'New Book Created.')
+                messages.success(request, f'New Book Created.')
 
-            recipient_list = User1.objects.all().filter(receive_promotions = True)
-            email_list = [User.objects.all().filter(username = i.user).first().email for i in recipient_list]
+                recipient_list = User1.objects.all().filter(receive_promotions=True)
+                email_list = [User.objects.all().filter(username=i.user).first().email for i in recipient_list]
 
-            subject = 'New Book Added!'
-            message = 'We have just added a new book: ' + request.POST['title']
+                subject = 'New Book Added!'
+                message = 'We have just added a new book: ' + request.POST['title']
 
-            send_mail(subject, message, EMAIL_HOST_USER, email_list, fail_silently=False)
+                send_mail(subject, message, EMAIL_HOST_USER, email_list, fail_silently=False)
+                return redirect('manage_books')
+        elif 'submit_book' in request.POST:
+            form = CreateBookForm()
+            edit_form = CreateBookForm(instance=Book.objects.all().filter(bookid = request.POST.get('book')).first())
+            book_id = Book.objects.all().filter(bookid = request.POST.get('book')).first().bookid
+            submit = True
+        elif 'submit_edit' in request.POST:
+            form = CreateBookForm()
+            edit_form = CreateBookForm(request.POST)
 
-            return redirect('manage_books')
+            if edit_form.is_valid():
+                book = edit_form.save(commit=False)
+                book.bookid = request.POST.get('submit_edit')
+                book.cover_picture = Book.objects.all().filter(bookid = request.POST.get('book')).first().cover_picture
+                book.save()
+
+        elif 'delete' in request.POST:
+            form = CreateBookForm()
+            edit_form = CreateBookForm()
+            id = request.POST['delete']
+            if Book.objects.all().filter(bookid=id):
+                promo = Book.objects.all().filter(bookid=id).first().delete()
     else:
         form = CreateBookForm()
+        edit_form = CreateBookForm()
 
     context = {
         'form': form,
+        'edit_form': edit_form,
         'books': Book.objects.all(),
+        'new_book': new_book,
+        'submit': submit,
+        'book_id': book_id,
     }
     return render(request, 'store/manage_books.html', context)
 
