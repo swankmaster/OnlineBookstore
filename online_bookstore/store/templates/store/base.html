@@ -84,7 +84,7 @@
 
         <header>
             <div class="container">
-                {% if not request.user.user1.user_active %}
+                {% if user.is_authenticated and not request.user.user1.user_active %}
                     <div class="behind">
                         Confirm Your Account Now
                     </div>

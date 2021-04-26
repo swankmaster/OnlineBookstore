@@ -55,7 +55,7 @@ class CartHasInventoryBook(models.Model):
 class Order(models.Model):
     order_id = models.IntegerField(primary_key=True)
     user1_user_id = models.ForeignKey('User1', models.DO_NOTHING,  default="", db_column='User1_user_id')  # Field name made lowercase.
-    paymentCard_card_id = models.ForeignKey('PaymentCard', models.DO_NOTHING, db_column='PaymentCard_card_id')  # Field name made lowercase.
+    paymentCard_card_id = models.ForeignKey('PaymentCard', models.SET_NULL, db_column='PaymentCard_card_id', null=True)  # Field name made lowercase.
     total = models.CharField(max_length=45, blank=True, null=True)
     promotion_promo = models.ForeignKey('Promotion', models.DO_NOTHING, db_column='Promotion_promo_code', null=True)  # Field name made lowercase.
     order_datetime = models.DateTimeField(blank=True, null=True)
@@ -83,7 +83,7 @@ class PaymentCard(models.Model):
     cvv = encrypt(models.IntegerField(blank=True, null=True))
     expiration_date = models.CharField(max_length=45, blank=True, null=True)
     billing_address = models.CharField(max_length=45, blank=True, null=True)
-    user1_user_id = models.ForeignKey('User1', models.DO_NOTHING,  default="", db_column='User1_user_id')  # Field name made lowercase.
+    user1_user_id = models.ForeignKey('User1', models.SET_NULL,  default="", db_column='User1_user_id', null=True)  # Field name made lowercase.
 
     class Meta:
         managed = True

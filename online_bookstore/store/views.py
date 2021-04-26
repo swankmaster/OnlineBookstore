@@ -143,10 +143,13 @@ def edit_profile(request):
             address_form = AddressForm(instance=ShippingAddress.objects.all().filter(user1_user_id = request.user.user1).last())
             cards = PaymentCard.objects.all().filter(user1_user_id=request.user.user1)
 
-            old_password = request.POST['old_password'].strip()
+            old_password = request.POST.get('old_password')
 
             user = request.user
-            if old_password and p_form.is_valid():
+            if p_form.is_valid():
+                print('id valid')
+                print(old_password)
+                print(request.POST)
                 if user.check_password(old_password):
                     p_form.save()
                     messages.success(request, f'Password updated for {user.username}!')
@@ -160,7 +163,7 @@ def edit_profile(request):
                     print('recipient: ' + email + '\nHOST_USER: ' + EMAIL_HOST_USER)
                     send_mail(subject, message, EMAIL_HOST_USER, [email], fail_silently=False)
 
-                    return redirect('edit_profile')
+                    return redirect('home')
                 else:
                     messages.success(request, f'Password information is incorrect.')
             else:
@@ -333,6 +336,8 @@ def checkout(request):
     books = []
     code = ""
     subtotal = 0
+    form = CreditCardForm(request.POST)
+
     for i in cart_books:
         book = Book.objects.all().filter(bookid=i.book_bookid.bookid).first()
         books.append([book, i.quantity])
@@ -359,73 +364,91 @@ def checkout(request):
             else:
                 messages.success(request, f'Invalid Promo Code')
         elif 'confirm' in request.POST:
-            if(Order.objects.all().filter(user1_user_id = request.user.user1, processed = False)):
-                order = Order.objects.all().filter(user1_user_id = request.user.user1, processed = False).first()
-                # order.processed = True
-                order.order_datetime = timezone.now()
-                order.save()
-
+            if not request.POST.get('select') and PaymentCard.objects.all().filter(user1_user_id=request.user.user1.user_id):
+                messages.success(request, f'You must select or enter a payment method')
             else:
-                order = Order(user1_user_id=request.user.user1, paymentCard_card_id=PaymentCard.objects.all().filter(
-                    user1_user_id=request.user.user1.user_id).first(), total=subtotal, order_datetime=timezone.now(),
-                              processed=False)
+                card = PaymentCard
+                if (PaymentCard.objects.all().filter(user1_user_id=request.user.user1.user_id)):
+                    card = PaymentCard.objects.all().filter(
+                        user1_user_id=request.user.user1.user_id, card_id = request.POST.get('select')).first()
+                else:
+                    if form.is_valid:
+                        card = form.save(commit=False)
+                        card.user1_user_id = request.user.user1
+                        card.save()
+
+                if(Order.objects.all().filter(user1_user_id = request.user.user1, processed = False)):
+                    order = Order.objects.all().filter(user1_user_id = request.user.user1, processed = False).first()
+                    # order.processed = True
+                    order.paymentCard_card_id = card
+                    order.order_datetime = timezone.now()
+                    order.save()
+
+                else:
+                    order = Order(user1_user_id=request.user.user1, total=subtotal, order_datetime=timezone.now(),
+                                  processed=False)
+                    order.paymentCard_card_id = card
+                    order.save()
+
+                username = request.user.username
+                first = request.user.first_name
+                last = request.user.last_name
+                confirmation_num = random.randint(100000, 999999)
+                order_id = Order.objects.all().filter(user1_user_id = request.user.user1, processed = False).first().order_id
+                order_date = Order.objects.all().filter(user1_user_id = request.user.user1, processed = False).first().order_datetime
+                order_total = Order.objects.all().filter(user1_user_id = request.user.user1, processed = False).first().total
+                shipping_address = ShippingAddress.objects.all().filter(user1_user_id = request.user.user1).first()
+                cart = Cart.objects.all().filter(user1_user_id = request.user.user1).first()
+                cart_items = CartHasInventoryBook.objects.all().filter(cart_cart = cart.cart_id)
+                books = []
+                for item in cart_items:
+                    quantity = item.quantity
+                    bookid = item.book_bookid.bookid
+                    update_book_quantity(bookid, quantity)
+
+                    ordered_book = OrderedBook(order_id = Order.objects.all().filter(user1_user_id = request.user.user1, processed = False).first(), book_bookid = item.book_bookid, quantity = quantity)
+                    ordered_book.save()
+
+                    books.append(Book.objects.all().filter(bookid = item.book_bookid.bookid).first().title)
+
+                email = request.user.email
+                messages.success(request, f'Purchase processed successfully! Please check your email for more information.')
+
+                subject = 'Order Confirmed.'
+                message = f'Your order has been confirmed!\n' \
+                          f'Order Details:\n\n' \
+                          f'\tName: {last}, {first}\n' \
+                          f'\tConfirmation Number: {confirmation_num}\n' \
+                          f'\tOrder ID: {order_id}\n' \
+                          f'\tOrder Date: {order_date}\n' \
+                          f'\tShipping Info: {shipping_address.street}, {shipping_address.city} {shipping_address.state}, {shipping_address.zip}\n' \
+                          f'\tBooks Ordered:\n'
+
+                for book in books:
+                    message += f'\t\t{book}\n'
+
+                message += f'Total: ${order_total}'
+
+                print('recipient: ' + email + '\nHOST_USER: ' + EMAIL_HOST_USER)
+                send_mail(subject, message, EMAIL_HOST_USER, [email], fail_silently=False)
+
+                # clear cart
+                CartHasInventoryBook.objects.all().filter(cart_cart=cart.cart_id).delete()
+
+                order = Order.objects.all().filter(user1_user_id=request.user.user1, processed=False).first()
+                order.processed = True
                 order.save()
 
-            username = request.user.username
-            first = request.user.first_name
-            last = request.user.last_name
-            confirmation_num = random.randint(100000, 999999)
-            order_id = Order.objects.all().filter(user1_user_id = request.user.user1, processed = False).first().order_id
-            order_date = Order.objects.all().filter(user1_user_id = request.user.user1, processed = False).first().order_datetime
-            order_total = Order.objects.all().filter(user1_user_id = request.user.user1, processed = False).first().total
-            shipping_address = ShippingAddress.objects.all().filter(user1_user_id = request.user.user1).first()
-            cart = Cart.objects.all().filter(user1_user_id = request.user.user1).first()
-            cart_items = CartHasInventoryBook.objects.all().filter(cart_cart = cart.cart_id)
-            books = []
-            for item in cart_items:
-                quantity = item.quantity
-                bookid = item.book_bookid.bookid
-                update_book_quantity(bookid, quantity)
+                return redirect('home')
 
-                ordered_book = OrderedBook(order_id = Order.objects.all().filter(user1_user_id = request.user.user1, processed = False).first(), book_bookid = item.book_bookid, quantity = quantity)
-                ordered_book.save()
-
-                books.append(Book.objects.all().filter(bookid = item.book_bookid.bookid).first().title)
-
-            email = request.user.email
-            messages.success(request, f'Purchase processed successfully! Please check your email for more information.')
-
-            subject = 'Order Confirmed.'
-            message = f'Your order has been confirmed!\n' \
-                      f'Order Details:\n\n' \
-                      f'\tName: {last}, {first}\n' \
-                      f'\tConfirmation Number: {confirmation_num}\n' \
-                      f'\tOrder ID: {order_id}\n' \
-                      f'\tOrder Date: {order_date}\n' \
-                      f'\tShipping Info: {shipping_address.street}, {shipping_address.city} {shipping_address.state}, {shipping_address.zip}\n' \
-                      f'\tBooks Ordered:\n'
-
-            for book in books:
-                message += f'\t\t{book}\n'
-
-            message += f'Total: ${order_total}'
-
-            print('recipient: ' + email + '\nHOST_USER: ' + EMAIL_HOST_USER)
-            send_mail(subject, message, EMAIL_HOST_USER, [email], fail_silently=False)
-
-            # clear cart
-            CartHasInventoryBook.objects.all().filter(cart_cart=cart.cart_id).delete()
-
-            order = Order.objects.all().filter(user1_user_id=request.user.user1, processed=False).first()
-            order.processed = True
-            order.save()
-
-            return redirect('home')
+    cards = PaymentCard.objects.all().filter(user1_user_id = request.user.user1)
 
     context = {
         'books': books,
         'subtotal': subtotal,
-        'code': code
+        'code': code,
+        'cards': cards,
+        'form': form
     }
     return render(request, 'store/checkout.html', context)
 

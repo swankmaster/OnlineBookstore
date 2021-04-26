@@ -1,6 +1,7 @@
 {% extends "store/base.html" %}
 {% load static %}
 {% load extras %}
+{% load crispy_forms_tags %}
 {% block content %}
     <h1 class="page-title">Checkout</h1>
     {% if not books %}
@@ -65,12 +66,34 @@
 					<td>Note: Only one promo can be applied at a time.</td>
 				</tr>
 			</table>
-
 		</div>
-
+		<div class="content-section">
+			<form method ="POST">
+				{% csrf_token %}
+				{% if cards %}
+					<table border=1 frame=void rules=rows style="width:100%:">
+						<large><b>Select a payment method:</b></large>
+						<colgroup>
+							<col span="1" style="width: 5%;">
+							<col span="1" style="width: 15%;">
+						</colgroup>
+						<tr>
+							<td><u>Card Number</u></td>
+							<td>Select</td>
+						</tr>
+						{% for card in cards %}
+						<tr>
+							<td>************{{ card.card_number|last_4 }}</td>
+							<td><input type="radio" name="select" value="{{card.card_id}}"></td>
+						</tr>
+						{% endfor %}
+				{% else %}
+					<large><b>Enter Payment Information:</b></large>
+					{{form|crispy}}
+			{% endif %}
+			</table>
+		</div>
         <div class="coming">
-            <form method ="POST">
-                {% csrf_token %}
                 <button class="btn btn-light" type="confirm" value="" name="confirm">Confirm Order</button>
             </form>
         </div>

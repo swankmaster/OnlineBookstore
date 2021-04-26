@@ -54,8 +54,3 @@ def last_4(value):
     else:
         last = value
     return(last)
-
-@register.filter
-def print(value):
-    print(value)
-    return(value)
