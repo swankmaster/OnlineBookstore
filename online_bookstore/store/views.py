@@ -522,7 +522,7 @@ def search(request):
             messages.success(request, f'\"{Book.objects.all().filter(bookid=book).first().title}\" added to your Cart!')
             return redirect('myCart')
     else:
-        books = Book.objects.all()
+        books = Book.objects.all().exclude(quantity='0')
 
     context = {
         'books': books,

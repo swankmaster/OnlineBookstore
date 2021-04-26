@@ -7,22 +7,18 @@
         <table border=1 frame=void rules=rows style="width:100%:">
          {% for book in books %}
                 <colgroup>
-                    <col span="1" style="width: 20%;">
-                    <col span="1" style="width: 20%;">
-                    <col span="1" style="width: 10%;">
-                    <col span="1" style="width: 40%;">
-                    <col span="1" style="width: 10%;">
-                    <col span="1" style="width: 10%;">
                     <col span="1" style="width: 10%;">
                     <col span="1" style="width: 15%;">
+                    <col span="1" style="width: 30%;">
+                    <col span="1" style="width: 7%;">
+                    <col span="1" style="width: 10%;">
+                    <col span="1" style="width: 5%;">
                 </colgroup>
                 <tr>
-
-                  <td><img src = "{% static 'store/images/' %}{{ book.cover_picture }}"  atl = {{ book.title }} width = "150"></td></td>
-                  <td><h3>{{ book.title }} </h3></td>
-                  <td><h3>{{ book.author }} </h3></td>
-                  <td> {{ book.description }} </td>
-                <td>${{book.sell_price|floatformat:2}} <td>
+                    <td><img src = "{% static 'store/images/' %}{{ book.cover_picture }}"  atl = {{ book.title }} width = "150"></td>
+                    <td> <h4>{{ book.title }}</h4><br><h6>By: {{ book.author }}</h6></td>
+                    <td><small class="form-text text-muted"> {{ book.description }}</small> </td>
+                    <td><h4>${{book.sell_price|floatformat:2}}</h4> </td>
                     {% if user.is_authenticated %}
                         {% if user.user1.user_suspend %}
                             <button class="btn btn-outline-info" name="addToCart" onclick = "location.href={% url 'suspended' %};"><img src = "{% static 'store/images/cart.png' %}" width = "25" height = "25"></button>
@@ -38,9 +34,9 @@
                         {% endif %}
                     {% endif %}
 <!--                    <td><span class="{{ book.rating }}|round_rating">★★★★★</span></td>-->
-                    <td><div><span class="stars-container stars-10">★★★★★</span></div></td>
+                    <td><div>{{ book.rating }}<img src = "{% static 'store/images/star.png' %}" width = "25"> </div></td>
 <!--                <td>{{ book.isbn }}</td>-->
-               </tr>
+                </tr>
             {% endfor %}
         </table>
     </main>
@@ -49,14 +45,16 @@
         <table border=1 frame=void rules=rows style="width:100%">
          {% for book in coming_soon %}
             <colgroup>
-                <col span="1" style="width: 20%;">
-                <col span="1" style="width: 20%;">
-                <col span="1" style="width: 60%;">
+                <col span="1" style="width: 10%;">
+                <col span="1" style="width: 15%;">
+                <col span="1" style="width: 30%;">
+                <col span="1" style="width: 5%;">
             </colgroup>
             <tr>
-              <td><img src = "{% static 'store/images/' %}{{ book.cover_picture }}"  atl = {{ book.title }} width = "150"></td>
-              <td><h3>{{ book.title }} </h3></td>
-                <td> {{ book.description }} </td>
+                <td><img src = "{% static 'store/images/' %}{{ book.cover_picture }}"  atl = {{ book.title }} width = "150"></td>
+                <td> <h4>{{ book.title }}</h4><br><h6>By: {{ book.author }}</h6></td>
+                <td><small class="form-text text-muted"> {{ book.description }}</small> </td>
+                <td><div>{{ book.rating }}<img src = "{% static 'store/images/star.png' %}" width = "25"> </div></td>
             </tr>
           {% endfor %}
         </table>
