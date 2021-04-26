@@ -33,12 +33,14 @@
                             {% if user.user1.user_suspend %}
                                 <button class="btn btn-outline-info" name="addToCart" onclick = "location.href={% url 'suspended' %};"><img src = "{% static 'store/images/cart.png' %}" width = "25" height = "25"></button>
                             {% else %}
-                                <td>
-                                <form method ="POST">
-                                    {% csrf_token %}
-                                    <button class="btn btn-outline-info" name="add_to_cart" type="add_to_cart" value="{{ book.bookid }}" ><img src = "{% static 'store/images/cart.png' %}" width = "25" height = "25"></button>
-                                </form>
-                                </td>
+                                {% if request.user.user1.user_active %}
+                                    <td>
+                                    <form method ="POST">
+                                        {% csrf_token %}
+                                        <button class="btn btn-outline-info" name="add_to_cart" type="add_to_cart" value="{{ book.bookid }}" ><img src = "{% static 'store/images/cart.png' %}" width = "25" height = "25"></button>
+                                    </form>
+                                    </td>
+                                {% endif %}
                             {% endif %}
                         {% endif %}
                    </tr>

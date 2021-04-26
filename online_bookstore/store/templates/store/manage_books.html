@@ -79,10 +79,6 @@
                     <td>{{ book.buy_price }}</td>
                     <td>{{ book.sell_price }}</td>
                     <td>
-                        <form method ="POST">
-                            {% csrf_token %}
-                            <button class="btn btn-dark" type="delete" value="{{ book.bookid }}" name="delete">Delete</button>
-                    </form>
                     </td>
                 </tr>
             {% endfor %}

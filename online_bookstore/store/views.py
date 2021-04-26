@@ -345,7 +345,6 @@ def checkout(request):
     books = []
     code = ""
     subtotal = 0
-    form = CreditCardForm(request.POST)
 
     for i in cart_books:
         book = Book.objects.all().filter(bookid=i.book_bookid.bookid).first()
@@ -356,9 +355,10 @@ def checkout(request):
         discount = 1.00
 
         if 'apply' in request.POST:
+            form = CreditCardForm()
             promo_code = Promotion.objects.all().filter(promo_code = request.POST.get('promo_code')).first()
             if promo_code:
-                if promo_code.end_date > timezone.now():
+                if promo_code.end_date > timezone.now() and promo_code.start_date < timezone.now():
                     discount -= float(promo_code.discount) / 100
                     subtotal = subtotal * discount
                     code = request.POST.get('promo_code')
@@ -366,17 +366,19 @@ def checkout(request):
                     Order.objects.all().filter(user1_user_id = request.user.user1, processed = False).delete()
                     order = Order(user1_user_id=request.user.user1, paymentCard_card_id=PaymentCard.objects.all().filter(
                                     user1_user_id=request.user.user1.user_id).first(), total=subtotal, order_datetime=timezone.now(),
-                                    processed=False)
+                                    processed=False, promotion_promo=promo_code)
                     order.save()
                 else:
                     messages.success(request, f'Invalid Promo Code')
             else:
                 messages.success(request, f'Invalid Promo Code')
+
         elif 'confirm' in request.POST:
+            form = CreditCardForm(request.POST)
             if not request.POST.get('select') and PaymentCard.objects.all().filter(user1_user_id=request.user.user1.user_id):
                 messages.success(request, f'You must select or enter a payment method')
             else:
-                card = PaymentCard
+                card = None
                 hasCard = True
                 if (PaymentCard.objects.all().filter(user1_user_id=request.user.user1.user_id)):
                     card = PaymentCard.objects.all().filter(
@@ -391,7 +393,8 @@ def checkout(request):
                 if(Order.objects.all().filter(user1_user_id = request.user.user1, processed = False)):
                     order = Order.objects.all().filter(user1_user_id = request.user.user1, processed = False).first()
                     # order.processed = True
-                    order.paymentCard_card_id = card
+                    order.paymentCard_card_id = PaymentCard.objects.all().filter(
+                        user1_user_id=request.user.user1.user_id, card_id = request.POST.get('select')).first()
                     order.order_datetime = timezone.now()
                     order.save()
 
@@ -451,6 +454,7 @@ def checkout(request):
 
                 return redirect('checkoutConfirmation')
         elif 'update' in request.POST:
+            form = CreditCardForm()
             address_form = AddressForm(request.POST, instance=ShippingAddress.objects.all().filter(
                 user1_user_id=request.user.user1).first())
 
@@ -461,6 +465,8 @@ def checkout(request):
             address.user1_user_id = request.user.user1
             address.save()
             messages.success(request, f'Shipping Address Updated.')
+    else:
+        form = CreditCardForm()
 
     cards = PaymentCard.objects.all().filter(user1_user_id = request.user.user1)
 
@@ -526,7 +532,6 @@ def search(request):
 
 def checkoutConfirmation(request):
     if Order.objects.all().filter(user1_user_id=request.user.user1, processed=False).first():
-        messages.success(request, f'Purchase processed successfully! Please check your email for more information.')
         order = Order.objects.all().filter(user1_user_id=request.user.user1, processed=False).first()
         address = ShippingAddress.objects.all().filter(user1_user_id=request.user.user1).first()
 

@@ -1,9 +1,9 @@
 {% extends "store/base.html" %}
 {% load static %}
 {% block content %}
-    <h1 style="text-align: center;">Order Confirmed</h1>
+    <h1 class="page-title">Order Confirmed</h1>
     {{ order.order_datetime }} <br>
     Status: Processed. Awaiting Shipment <br>
-    {{ order.price }} <br>
+    Total Cost: ${{ order.total|floatformat:2 }} <br>
     Shipping to: {{ address.street }}, {{ address.city }} {{ address.state }} {{ address.zip }} <br>
 {% endblock content%}

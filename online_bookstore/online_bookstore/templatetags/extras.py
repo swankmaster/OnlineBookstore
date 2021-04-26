@@ -54,3 +54,11 @@ def last_4(value):
     else:
         last = value
     return(last)
+
+@register.filter
+def round_rating(value):
+    rounded = round(value / 5, 1)
+    rounded = rounded * 100
+    rounded_class = "stars-container stars-" + rounded
+    print(rounded_class)
+    return(rounded_class)

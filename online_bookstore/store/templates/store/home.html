@@ -1,5 +1,6 @@
 {% extends "store/base.html" %}
-{% load static %}
+{% load static %}\
+{% load extras %}
 {% block content %}
     <h1 class="page-title">Featured Books</h1>
     <main>
@@ -8,14 +9,18 @@
                 <colgroup>
                     <col span="1" style="width: 20%;">
                     <col span="1" style="width: 20%;">
+                    <col span="1" style="width: 10%;">
                     <col span="1" style="width: 40%;">
                     <col span="1" style="width: 10%;">
                     <col span="1" style="width: 10%;">
+                    <col span="1" style="width: 10%;">
+                    <col span="1" style="width: 15%;">
                 </colgroup>
                 <tr>
 
                   <td><img src = "{% static 'store/images/' %}{{ book.cover_picture }}"  atl = {{ book.title }} width = "150"></td></td>
                   <td><h3>{{ book.title }} </h3></td>
+                  <td><h3>{{ book.author }} </h3></td>
                   <td> {{ book.description }} </td>
                 <td>${{book.sell_price|floatformat:2}} <td>
                     {% if user.is_authenticated %}
@@ -32,6 +37,9 @@
                             </td>
                         {% endif %}
                     {% endif %}
+<!--                    <td><span class="{{ book.rating }}|round_rating">★★★★★</span></td>-->
+                    <td><div><span class="stars-container stars-10">★★★★★</span></div></td>
+<!--                <td>{{ book.isbn }}</td>-->
                </tr>
             {% endfor %}
         </table>
