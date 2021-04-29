@@ -26,15 +26,17 @@
                             {% if user.user1.user_suspend %}
                                 <meta http-equiv="refresh" content="0; URL={% url 'suspended' %}">
                             {% else %}
-                                {% if not request.user.user1.user_active %}
-                                    <a class="nav-item nav-link" href="{% url 'inactive' %}">My Cart</a>
-                                {% else %}
-                                    <a class="nav-item nav-link" href="{% url 'myCart' %}">My Cart</a>
-                                {% endif %}
-                                {% if not request.user.user1.user_active %}
-                                    <a class="nav-item nav-link" href="{% url 'inactive' %}">Order History</a>
-                                {% else %}
-                                    <a class="nav-item nav-link" href="{% url 'orderHistory' %}">Order History</a>
+                                {% if not request.user.is_superuser %}
+                                    {% if not request.user.user1.user_active %}
+                                        <a class="nav-item nav-link" href="{% url 'inactive' %}">My Cart</a>
+                                    {% else %}
+                                        <a class="nav-item nav-link" href="{% url 'myCart' %}">My Cart</a>
+                                    {% endif %}
+                                    {% if not request.user.user1.user_active %}
+                                        <a class="nav-item nav-link" href="{% url 'inactive' %}">Order History</a>
+                                    {% else %}
+                                        <a class="nav-item nav-link" href="{% url 'orderHistory' %}">Order History</a>
+                                    {% endif %}
                                 {% endif %}
 
                                 {% if not request.user.user1.user_active %}
@@ -46,7 +48,7 @@
                                             Admin
                                         </a>
                                         <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                                            <a class="dropdown-item" href="/admin">Admin Panel</a>
+<!--                                            <a class="dropdown-item" href="/admin">Admin Panel</a>-->
                                             <a class="dropdown-item" href="{% url 'manage_books' %}">Manage Books</a>
                                             <a class="dropdown-item" href="{% url 'manage_users' %}">Manage Users</a>
                                             <a class="dropdown-item" href="{% url 'manage_promos' %}">Manage Promos</a>

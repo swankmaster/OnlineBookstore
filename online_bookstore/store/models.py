@@ -35,7 +35,7 @@ class Book(models.Model):
 
 class Cart(models.Model):
     cart_id = models.IntegerField(primary_key=True)
-    user1_user_id = models.ForeignKey('User1', models.DO_NOTHING, default="", db_column='User1_user_id')  # Field name made lowercase.
+    user1_user_id = models.ForeignKey('User1', models.CASCADE, default="", db_column='User1_user_id')  # Field name made lowercase.
 
     class Meta:
         managed = True
@@ -43,7 +43,7 @@ class Cart(models.Model):
 
 
 class CartHasInventoryBook(models.Model):
-    cart_cart = models.ForeignKey(Cart, models.DO_NOTHING, db_column='Cart_cart_id')  # Field name made lowercase.
+    cart_cart = models.ForeignKey(Cart, models.CASCADE, db_column='Cart_cart_id')  # Field name made lowercase.
     book_bookid = models.ForeignKey(Book, models.SET_NULL, db_column='Book_bookID', null=True)  # Field name made lowercase.
     quantity = models.IntegerField(default=1)
 
@@ -54,7 +54,7 @@ class CartHasInventoryBook(models.Model):
 
 class Order(models.Model):
     order_id = models.IntegerField(primary_key=True)
-    user1_user_id = models.ForeignKey('User1', models.DO_NOTHING,  default="", db_column='User1_user_id')  # Field name made lowercase.
+    user1_user_id = models.ForeignKey('User1', models.CASCADE,  default="", db_column='User1_user_id')  # Field name made lowercase.
     paymentCard_card_id = models.ForeignKey('PaymentCard', models.SET_NULL, db_column='PaymentCard_card_id', null=True)  # Field name made lowercase.
     total = models.CharField(max_length=45, blank=True, null=True)
     promotion_promo = models.ForeignKey('Promotion', models.DO_NOTHING, db_column='Promotion_promo_code', null=True)  # Field name made lowercase.
@@ -96,7 +96,7 @@ class ShippingAddress(models.Model):
     city = models.CharField(max_length=45, blank=True, null=True)
     state = models.CharField(max_length=45, blank=True, null=True)
     zip = models.CharField(max_length=45, blank=True, null=True)
-    user1_user_id = models.OneToOneField('User1', models.DO_NOTHING,  default="", db_column='User1_user_id')  # Field name made lowercase.
+    user1_user_id = models.OneToOneField('User1', models.CASCADE,  default="", db_column='User1_user_id')  # Field name made lowercase.
 
     class Meta:
         managed = True
@@ -118,7 +118,7 @@ class Promotion(models.Model):
 class Transaction(models.Model):
     transaction_id = models.IntegerField(primary_key=True)
     book_bookid = models.ForeignKey(Book, models.DO_NOTHING,  default="", db_column='Book_bookID')  # Field name made lowercase.
-    order_order = models.ForeignKey(Order, models.DO_NOTHING,  default="", db_column='Order_order_id')  # Field name made lowercase.
+    order_order = models.ForeignKey(Order, models.SET_NULL,  default="", db_column='Order_order_id', null=True)  # Field name made lowercase.
     quantity = models.CharField(max_length=45)
 
     class Meta:

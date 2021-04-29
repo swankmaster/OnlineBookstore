@@ -27,10 +27,10 @@
                     <tr>
 
                       <td><img src = "{% static 'store/images/' %}{{ book.cover_picture }}"  atl = {{ book.title }} width = "150"></td>
-                    <td> <h4>{{ book.title }}</h4><br><h6>By: {{ book.author }}</h6></td>
+                    <td> <h4>{{ book.title }}</h4><br><small>By: {{ book.author }}</small><br><small> ISBN: {{ book.isbn }}</small></td>
                     <td><small class="form-text text-muted"> {{ book.description }}</small> </td>
                     <td><h4>${{book.sell_price|floatformat:2}}</h4> </td>
-                    {% if user.is_authenticated %}
+                    {% if user.is_authenticated and not request.user.is_superuser %}
                         {% if user.user1.user_suspend %}
                             <button class="btn btn-outline-info" name="addToCart" onclick = "location.href={% url 'suspended' %};"><img src = "{% static 'store/images/cart.png' %}" width = "25" height = "25"></button>
                         {% elif not user.user1.user_active %}

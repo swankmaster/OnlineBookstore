@@ -61,21 +61,18 @@
                 <legend class="form-group">Your Payment Methods</legend>
                     {% if cards %}
                         <colgroup>
-                            <col span="1" style="width: 1%;">
                             <col span="1" style="width: 2%;">
                             <col span="1" style="width: 2%;">
                             <col span="1" style="width: 1%;">
                         </colgroup>
                         <tr>
-                            <td><u>ID</td>
-                            <td><u>Last 4 Digits</td>
+                            <td><u>Card Number</td>
                             <td><u>Expiration</td>
                             <td> </td>
                         </tr>
                         {% for card in cards %}
                         <tr>
-                            <td>{{ card.card_id }}</td>
-                            <td>{{ card.card_number|last_4 }}</td>
+                            <td>************{{ card.card_number|last_4 }}</td>
                             <td>{{ card.expiration_date }}</td>
                             <td>
                             <form method ="POST">

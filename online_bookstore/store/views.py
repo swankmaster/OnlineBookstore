@@ -6,7 +6,6 @@ from django.contrib import messages
 from django.template.loader import render_to_string
 from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_encode
-
 from .forms import UserRegisterForm, User1RegisterForm, UpdateUserInfoForm, UpdateUser1InfoForm, NewPasswordForm, CreditCardForm, NewPromoForm, SuspendUserForm, CreateBookForm, AddressForm
 from .models import Book, PaymentCard, Promotion, User1, Cart, CartHasInventoryBook, ShippingAddress, Order, OrderedBook
 from django.contrib.auth.models import User

@@ -24,26 +24,26 @@
                 {% endif %}
             </form>
     </div>
-    <div class="content-section">
-        <form method ="POST">
-                {% csrf_token %}
-                    <fieldset class="form-group">
-                        <legend class="border-bottom mb-4">Edit Book</legend>
-                    </fieldset>
-                {% if not submit %}
-                        <input type="text" id="book" name="book" class="textinput textInput form-control">
-                        <small id="hint_id_old_password" class="form-text text-muted">Enter the Book ID you would like to edit.</small>
-                    <div class="form-group">
-                        <button class="btn btn-dark" type="submit" name="submit_book">Submit</button>
-                    </div>
-                {% else %}
-                    {{ edit_form | crispy }}
-                    <div class="form-group">
-                        <button class="btn btn-dark" type="submit" name="submit_edit" value="{{ book_id }}">Update</button>
-                    </div>
-                {% endif %}
-            </form>
-    </div>
+<!--    <div class="content-section">-->
+<!--        <form method ="POST">-->
+<!--                {% csrf_token %}-->
+<!--                    <fieldset class="form-group">-->
+<!--                        <legend class="border-bottom mb-4">Edit Book</legend>-->
+<!--                    </fieldset>-->
+<!--                {% if not submit %}-->
+<!--                        <input type="text" id="book" name="book" class="textinput textInput form-control">-->
+<!--                        <small id="hint_id_old_password" class="form-text text-muted">Enter the Book ID you would like to edit.</small>-->
+<!--                    <div class="form-group">-->
+<!--                        <button class="btn btn-dark" type="submit" name="submit_book">Submit</button>-->
+<!--                    </div>-->
+<!--                {% else %}-->
+<!--                    {{ edit_form | crispy }}-->
+<!--                    <div class="form-group">-->
+<!--                        <button class="btn btn-dark" type="submit" name="submit_edit" value="{{ book_id }}">Update</button>-->
+<!--                    </div>-->
+<!--                {% endif %}-->
+<!--            </form>-->
+<!--    </div>-->
 
     <div class="content-section">
             <table border=1 frame=void rules=rows style="width:100%:">
